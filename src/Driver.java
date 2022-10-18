@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -11,14 +12,25 @@ public class Driver
         /*
          * data
          */
-        int[] p1 = new int[26];
-        int[] p2 = new int[26];
-        int[] p3 = new int[26];
-        int[] p4 = new int[26];
-        int[] p5 = new int[26];
+        int[] p1Weights = new int[26];
+        int[] p2Weights = new int[26];
+        int[] p3Weights = new int[26];
+        int[] p4Weights = new int[26];
+        int[] p5Weights = new int[26];
         ArrayList<String> wordList = new ArrayList<String>();
 
+        int occurrences = 0;
+        boolean occured = false;
         String answer;
+        String firstGuess;
+
+        ArrayList<Letter> letters = new ArrayList<Letter>();
+
+        for(int i = 0; i < 26; i++)
+        {
+            char cOut = (char)(i + 65);
+            letters.add(new Letter(cOut));
+        }
 
         /*
          * Collect data from Weighted_Wordle_List.txt
@@ -33,11 +45,11 @@ public class Driver
                 Scanner lineParser = new Scanner(record);
                 lineParser.useDelimiter(",");
 
-                p1[i] = lineParser.nextInt();
-                p2[i] = lineParser.nextInt();
-                p3[i] = lineParser.nextInt();
-                p4[i] = lineParser.nextInt();
-                p5[i] = lineParser.nextInt();
+                p1Weights[i] = lineParser.nextInt();
+                p2Weights[i] = lineParser.nextInt();
+                p3Weights[i] = lineParser.nextInt();
+                p4Weights[i] = lineParser.nextInt();
+                p5Weights[i] = lineParser.nextInt();
 
                 lineParser.close();
                 i++;
@@ -103,8 +115,64 @@ public class Driver
          * Choose a random word as the answer for the Wordle game.
          */
         Random rand = new Random();
-        answer = wordList.get(rand.nextInt(2315));
+        // answer = wordList.get(rand.nextInt(2315));
+        // answer = answer.toUpperCase();
+        // char[] answerChArr = answer.toCharArray();
+        // firstGuess = wordList.get(rand.nextInt(12971));
+        // firstGuess = firstGuess.toUpperCase();
+        // char[] guessChArr = firstGuess.toCharArray();
 
+        answer = "STALK";
+        firstGuess = "STALL";
+        char[] answerChArr = answer.toCharArray();
+        char[] guessChArr = firstGuess.toCharArray();
+        //while(!Arrays.equals(answerChArr, guessChArr))
+        //{
+            for(int i = 0; i < 5; i++)      //guessChArr
+            {  
+                Letter temp = letters.get(guessChArr[i] - 65);
+
+                for(int j = 0; j < 5; j++)  //answerChArr
+                {
+                    if(guessChArr[i] == answerChArr[j])
+                    {
+                        if(i == j)
+                        {
+                            temp.addCorrect(i);
+                        }
+                        else
+                        {
+                            temp.addIncorrect(i);
+                        }
+                        occured = true;
+                        occurrences++;
+                    }
+                }
+
+                if(occured)
+                {
+                    if(occurrences > letters.get(guessChArr[i] - 65).getMinOcc())
+                    {
+                        temp.incrementMinOcc();
+                    }
+                    else
+                    {
+                        temp.setMaxOcc(temp.getMinOcc());
+                    }
+                } 
+                else
+                {
+                    temp.setMaxOcc(0);
+                }
+            }
+        //}
+        System.out.println("|let|min|max| cp... | icp... | ");
+        for(Letter l : letters)
+        {
+            System.out.printf("| %c | %d |");
+        }
+
+        System.out.println("Correct! The answer is " + answer);
         
     }
 }

@@ -1,6 +1,10 @@
+import java.util.ArrayList;
+
 public class Letter {
     
     private char lett;
+    private ArrayList<Integer> correctPlacement;
+    private ArrayList<Integer> incorrectPlacement;
     private int minOcc;
     private int maxOcc;         //if 0, means it is not a correct letter
     private boolean attempted;  //has been used in a guess
@@ -9,13 +13,15 @@ public class Letter {
     {
         lett = lettIn;
         minOcc = -1;
-        maxOcc = -1;
+        maxOcc = 5;
         attempted = false;
+        correctPlacement = new ArrayList<Integer>();
+        incorrectPlacement = new ArrayList<Integer>();
     }
 
-    public void setMinOcc(int occIn)
+    public void incrementMinOcc()
     {
-        minOcc = occIn;
+        minOcc++;
     }
 
     public int getMinOcc()
@@ -49,5 +55,25 @@ public class Letter {
     public char getLett()
     {
         return lett;
+    }
+
+    public void addCorrect(int placement)
+    {
+        correctPlacement.add(placement);
+    }
+
+    public ArrayList getCorrect()
+    {
+        return correctPlacement;
+    }
+
+    public void addIncorrect(int placement)
+    {
+        incorrectPlacement.add(placement);
+    }
+
+    public ArrayList getIncorrect()
+    {
+        return incorrectPlacement;
     }
 }
