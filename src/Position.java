@@ -1,18 +1,15 @@
 public class Position {
     
     /*
-     * Index 0 represents 'a' and index 25 represents 'z'
+     * Index 0 represents 'A' and index 25 represents 'Z'
      */
     private int[] weight;
 
-    public Position(int pIn)
+    public Position()
     {
         weight = new int[26];
     }
 
-    /*
-     * lettIn 
-     */
     public void setWeight(int lettIn, int weightIn)
     {
         weight[lettIn] = weightIn;
