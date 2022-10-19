@@ -12,7 +12,7 @@ public class Letter {
     public Letter(char lettIn)
     {
         lett = lettIn;
-        minOcc = -1;
+        minOcc = 0;
         maxOcc = 5;
         attempted = false;
         correctPlacement = new ArrayList<Integer>();

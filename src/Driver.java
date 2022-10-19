@@ -122,8 +122,8 @@ public class Driver
         // firstGuess = firstGuess.toUpperCase();
         // char[] guessChArr = firstGuess.toCharArray();
 
-        answer = "STALK";
-        firstGuess = "STALL";
+        answer = "VIVOV";
+        firstGuess = "OVVVV";
         char[] answerChArr = answer.toCharArray();
         char[] guessChArr = firstGuess.toCharArray();
         //while(!Arrays.equals(answerChArr, guessChArr))
@@ -164,12 +164,27 @@ public class Driver
                 {
                     temp.setMaxOcc(0);
                 }
+
+                occured = false;
             }
         //}
+        
         System.out.println("|let|min|max| cp... | icp... | ");
         for(Letter l : letters)
         {
-            System.out.printf("| %c | %d |");
+            System.out.printf("| %c | %d | %d | ", l.getLett(), l.getMinOcc(), l.getMaxOcc());
+            ArrayList<Integer> temp = l.getCorrect();
+            for(Integer p : temp)
+            {
+                System.out.print(p + " ");
+            }
+            System.out.print("| ");
+            temp = l.getIncorrect();
+            for(Integer p : temp)
+            {
+                System.out.print(p + " ");
+            }
+            System.out.println("|");
         }
 
         System.out.println("Correct! The answer is " + answer);
