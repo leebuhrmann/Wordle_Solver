@@ -135,6 +135,15 @@ public class Game
     }
 
     /*
+     * Retrieves a specified Letter.
+     */
+    public Letter getLetter(char lettIn)
+    {
+        lettIn = Character.toUpperCase(lettIn);
+        return letters.get(lettIn - 65);
+    }
+
+    /*
     * Fills list with Instantiated Letters.
     */
     private void fillLetters()
@@ -235,14 +244,12 @@ public class Game
         for(Letter l : letters)
         {
             System.out.printf("| %c | %d | %d | ", l.getLett(), l.getMinOcc(), l.getMaxOcc());
-            ArrayList<Integer> temp = l.getCorrect();
-            for(Integer p : temp)
+            for(Integer p : l.getCorrect())
             {
                 System.out.print(p + " ");
             }
             System.out.print("| ");
-            temp = l.getIncorrect();
-            for(Integer p : temp)
+            for(Integer p : l.getIncorrect())
             {
                 System.out.print(p + " ");
             }

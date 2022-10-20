@@ -63,7 +63,7 @@ public class Letter {
         correctPlacement.add(placement);
     }
 
-    public ArrayList getCorrect()
+    public ArrayList<Integer> getCorrect()
     {
         return correctPlacement;
     }
@@ -73,7 +73,7 @@ public class Letter {
         incorrectPlacement.add(placement);
     }
 
-    public ArrayList getIncorrect()
+    public ArrayList<Integer> getIncorrect()
     {
         return incorrectPlacement;
     }

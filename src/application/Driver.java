@@ -3,6 +3,7 @@ package application;
 import java.io.File;
 import java.io.FileNotFoundException;
 import classes.Game;
+import classes.Letter;
 
 public class Driver 
 {
@@ -15,7 +16,6 @@ public class Driver
         //guesser.printData();
         //guesser.printDictionary(); 
         guesser.score();
-        guesser.printScore();
-        
+        guesser.printScore();      
     }
 }
