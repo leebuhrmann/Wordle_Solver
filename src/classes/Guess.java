@@ -1,3 +1,4 @@
+package classes;
 public class Guess {
 
     private char[] placement;

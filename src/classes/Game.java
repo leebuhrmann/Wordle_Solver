@@ -1,13 +1,14 @@
+package classes;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Guesser
+public class Game
 {
     /*
-    * data
+    * File data.
     */
     private File dictionary;
     private File weightedListFile;
@@ -18,27 +19,28 @@ public class Guesser
     private int[] p5Weights = new int[26];
     private ArrayList<String> wordList = new ArrayList<String>();
 
-    private int occurrences;
-    private boolean occured;
+    /*
+     * Game and Score fields.
+     */
     private String answer;
     private char[] answerChArr;
     private String guess;
     private char[] guessChArr;
-    private Random rand;
-
     private ArrayList<Letter> letters = new ArrayList<Letter>();
 
-    public Guesser(File dictionaryIn, File weightedListFileIn) throws FileNotFoundException
-    {
-        dictionary = dictionaryIn;
-        weightedListFile = weightedListFileIn;
-        rand = new Random();
-        occurrences = 0;
-        occured = false;
+    /*
+     * Tools.
+     */
+    private Random rand;
+    private int occurrences;
+    private boolean occured;
 
-        fillLetters();
-        collectWeightData();
-        parseDictionary();
+    /*
+     * Creates a 
+     */
+    public Game(File dictionaryIn, File weightedListFileIn) 
+    {
+        constructorHelper(dictionaryIn, weightedListFileIn);
         
         answer = wordList.get(rand.nextInt(2315));
         answer = answer.toUpperCase();
@@ -48,22 +50,34 @@ public class Guesser
         guessChArr = guess.toCharArray();
     }
 
-    public Guesser(File dictionaryIn, File weightedListFileIn, String guessIn, String answerIn) throws FileNotFoundException
+    public Game(File dictionaryIn, File weightedListFileIn, String guessIn, String answerIn)
     {
-        dictionary = dictionaryIn;
-        weightedListFile = weightedListFileIn;
-        rand = new Random();
-        occurrences = 0;
-        occured = false;
-
-        fillLetters();
-        collectWeightData();
-        parseDictionary();
+        constructorHelper(dictionaryIn, weightedListFileIn);
         
         answer = answerIn.toUpperCase();
         answerChArr = answer.toCharArray();
         guess = guessIn.toUpperCase();
         guessChArr = guess.toCharArray();
+    }
+
+    private void constructorHelper(File dictionaryIn, File weightedListFileIn)
+    {
+        try
+        {
+            dictionary = dictionaryIn;
+            weightedListFile = weightedListFileIn;
+            rand = new Random();
+            occurrences = 0;
+            occured = false;
+    
+            fillLetters();
+            collectWeightData();
+            parseDictionary();
+        }
+        catch(FileNotFoundException fnfe)
+        {
+            System.out.println("File was not found!");
+        }
     }
 
 
