@@ -29,19 +29,13 @@ public class Game
     private ArrayList<Letter> letters = new ArrayList<Letter>();
 
     /*
-     * Tools.
-     */
-    private Random rand;
-    private int occurrences;
-    private boolean occured;
-
-    /*
      * Creates a 
      */
     public Game(File dictionaryIn, File weightedListFileIn) 
     {
         constructorHelper(dictionaryIn, weightedListFileIn);
-        
+
+        Random rand = new Random();
         answer = wordList.get(rand.nextInt(2315));
         answer = answer.toUpperCase();
         answerChArr = answer.toCharArray();
@@ -66,9 +60,6 @@ public class Game
         {
             dictionary = dictionaryIn;
             weightedListFile = weightedListFileIn;
-            rand = new Random();
-            occurrences = 0;
-            occured = false;
     
             fillLetters();
             collectWeightData();
@@ -92,6 +83,10 @@ public class Game
      */
     public void score()
     {
+        int occurrences = 0;
+        boolean occured = false;
+        boolean inPlace = false;
+
         for(int i = 0; i < 5; i++)      //guessChArr
         {  
             Letter temp = letters.get(guessChArr[i] - 65);
@@ -102,12 +97,9 @@ public class Game
                 {
                     if(i == j)
                     {
-                        temp.addCorrect(i);
+                        inPlace = true;
                     }
-                    else
-                    {
-                        temp.addIncorrect(i);
-                    }
+                    
                     occured = true;
                     occurrences++;
                 }
@@ -123,6 +115,15 @@ public class Game
                 {
                     temp.setMaxOcc(temp.getMinOcc());
                 }
+
+                if(inPlace)
+                {
+                    temp.addCorrect(i);
+                }
+                else
+                {
+                    temp.addIncorrect(i);
+                }
             } 
             else
             {
@@ -130,6 +131,7 @@ public class Game
             }
 
             occured = false;
+            inPlace = false;
         }
         
     }
