@@ -10,11 +10,11 @@ public class Driver
     {
         Game guesser = new Game(new File("src/Wordle_Dictionary.txt")
                                     , new File("src/Weighted_Wordle_List.txt")
-                                    , "Vinve", "Voviv");
+                                    , "Stall");
 
         //guesser.printData();
         //guesser.printDictionary(); 
-        guesser.score();
+        guesser.score("Stalk");
         guesser.printScore();      
     }
 }

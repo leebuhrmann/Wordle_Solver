@@ -5,7 +5,7 @@ public class Letter {
     
     private char lett;
     private ArrayList<Integer> correctPlacement;
-    private ArrayList<Integer> incorrectPlacement;
+    private ArrayList<Integer> notAttemptedPlacements;
     private int minOcc;
     private int maxOcc;         //if 0, means it is not a correct letter
     private boolean attempted;  //has been used in a guess
@@ -17,7 +17,11 @@ public class Letter {
         maxOcc = 5;
         attempted = false;
         correctPlacement = new ArrayList<Integer>();
-        incorrectPlacement = new ArrayList<Integer>();
+        notAttemptedPlacements = new ArrayList<Integer>();
+        for(int i = 0; i < 5; i++)
+        {
+            notAttemptedPlacements.add(i);
+        }
     }
 
     public void incrementMinOcc()
@@ -68,13 +72,13 @@ public class Letter {
         return correctPlacement;
     }
 
-    public void addIncorrect(int placement)
+    public void removeIncorrect(Integer placement)
     {
-        incorrectPlacement.add(placement);
+        notAttemptedPlacements.remove(placement);
     }
 
-    public ArrayList<Integer> getIncorrect()
+    public ArrayList<Integer> getNotAttempted()
     {
-        return incorrectPlacement;
+        return notAttemptedPlacements;
     }
 }

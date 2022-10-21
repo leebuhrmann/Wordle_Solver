@@ -18,14 +18,13 @@ public class Game
     private int[] p4Weights = new int[26];
     private int[] p5Weights = new int[26];
     private ArrayList<String> wordList = new ArrayList<String>();
+    private ArrayList<String> guessHistory;
 
     /*
      * Game and Score fields.
      */
     private String answer;
     private char[] answerChArr;
-    private String guess;
-    private char[] guessChArr;
     private ArrayList<Letter> letters = new ArrayList<Letter>();
 
     /*
@@ -39,19 +38,14 @@ public class Game
         answer = wordList.get(rand.nextInt(2315));
         answer = answer.toUpperCase();
         answerChArr = answer.toCharArray();
-        guess = wordList.get(rand.nextInt(12971));
-        guess = guess.toUpperCase();
-        guessChArr = guess.toCharArray();
     }
 
-    public Game(File dictionaryIn, File weightedListFileIn, String guessIn, String answerIn)
+    public Game(File dictionaryIn, File weightedListFileIn, String answerIn)
     {
         constructorHelper(dictionaryIn, weightedListFileIn);
         
         answer = answerIn.toUpperCase();
         answerChArr = answer.toCharArray();
-        guess = guessIn.toUpperCase();
-        guessChArr = guess.toCharArray();
     }
 
     private void constructorHelper(File dictionaryIn, File weightedListFileIn)
@@ -60,6 +54,7 @@ public class Game
         {
             dictionary = dictionaryIn;
             weightedListFile = weightedListFileIn;
+            guessHistory = new ArrayList<String>();
     
             fillLetters();
             collectWeightData();
@@ -71,6 +66,19 @@ public class Game
         }
     }
 
+    /*
+     * Has the computer play the game by itslef. Returns the number of
+     * guesses it took to find the correct answer.
+     */
+    // public int botPlay()
+    // {
+    //     while(guessHistory.get(guessHistory.size() - 1) != answer)
+    //     {
+    //         score(makeGuess());
+    //     }
+
+    //     return guessHistory.size();
+    // }
 
     /*
      * Scores the guess.
@@ -80,8 +88,11 @@ public class Game
      * If the letter was in the answer, marks the minimum number of occurrences it is aware of.
      * If the letter was not in the word, marks the maximum number of occurrences as 0.
      */
-    public void score()
+    public void score(String guessIn)
     {
+        String guess = guessIn.toUpperCase();
+        char[] guessChArr = guess.toCharArray();
+
         int occurrences = 0;
         boolean occured = false;
         boolean inPlace = false;
@@ -121,7 +132,7 @@ public class Game
                 }
                 else
                 {
-                    temp.addIncorrect(i);
+                    temp.removeIncorrect(i);
                 }
             } 
             else
@@ -134,7 +145,41 @@ public class Game
             inPlace = false;
         }
         
+        guessHistory.add(guess);
     }
+
+
+    // public String makeGuess()
+    // {
+    //     char[] guess = new char[5];
+    //     ArrayList<Integer> list;
+
+    //     // Places all correct letters with known locations.
+    //     for(Letter l : letters)
+    //     {
+    //         list = l.getCorrect();
+    //         if(!list.isEmpty())
+    //         {
+    //             for(Integer i : list)
+    //             {
+    //                 guess[i] = l.getLett();
+    //             }
+    //         }
+    //     }
+
+    //     // Places all correct letters without known locations.
+    //     for(Letter l : letters)
+    //     {
+    //         list = l.getNotAttempted();
+    //         if(!list.isEmpty())
+    //         {
+    //             for(Integer i : list)
+    //             {
+                    
+    //             }
+    //         }
+    //     }
+    // }
 
     /*
      * Retrieves a specified Letter.
@@ -240,9 +285,9 @@ public class Game
      */
     public void printScore()
     {
-        System.out.println("\nGuess: " + guess + "\nAnswer: " + answer);
+        System.out.println("\nGuess: " + guessHistory.get(guessHistory.size() - 1) + "\nAnswer: " + answer);
 
-        System.out.println("\n|let|min|max| cp... | icp... | ");
+        System.out.println("\n|let|min|max| correct placements | not attempted placements | ");
         for(Letter l : letters)
         {
             System.out.printf("| %c | %d | %d | ", l.getLett(), l.getMinOcc(), l.getMaxOcc());
@@ -251,7 +296,7 @@ public class Game
                 System.out.print(p + " ");
             }
             System.out.print("| ");
-            for(Integer p : l.getIncorrect())
+            for(Integer p : l.getNotAttempted())
             {
                 System.out.print(p + " ");
             }
