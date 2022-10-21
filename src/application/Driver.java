@@ -15,6 +15,8 @@ public class Driver
         //guesser.printData();
         //guesser.printDictionary(); 
         guesser.score("Stalk");
-        guesser.printScore();      
+        guesser.printScore(); 
+        
+        
     }
 }

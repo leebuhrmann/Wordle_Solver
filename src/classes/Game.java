@@ -70,15 +70,15 @@ public class Game
      * Has the computer play the game by itslef. Returns the number of
      * guesses it took to find the correct answer.
      */
-    // public int botPlay()
-    // {
-    //     while(guessHistory.get(guessHistory.size() - 1) != answer)
-    //     {
-    //         score(makeGuess());
-    //     }
+    public int botPlay()
+    {
+        while(guessHistory.get(guessHistory.size() - 1) != answer)
+        {
+            score(makeGuess());
+        }
 
-    //     return guessHistory.size();
-    // }
+        return guessHistory.size();
+    }
 
     /*
      * Scores the guess.
@@ -149,37 +149,37 @@ public class Game
     }
 
 
-    // public String makeGuess()
-    // {
-    //     char[] guess = new char[5];
-    //     ArrayList<Integer> list;
+    public String makeGuess()
+    {
+        char[] guess = new char[5];
+        ArrayList<Integer> list;
 
-    //     // Places all correct letters with known locations.
-    //     for(Letter l : letters)
-    //     {
-    //         list = l.getCorrect();
-    //         if(!list.isEmpty())
-    //         {
-    //             for(Integer i : list)
-    //             {
-    //                 guess[i] = l.getLett();
-    //             }
-    //         }
-    //     }
+        // Places all correct letters with known locations.
+        for(Letter l : letters)
+        {
+            list = l.getCorrect();
+            if(!list.isEmpty())
+            {
+                for(Integer i : list)
+                {
+                    guess[i] = l.getLett();
+                }
+            }
+        }
 
-    //     // Places all correct letters without known locations.
-    //     for(Letter l : letters)
-    //     {
-    //         list = l.getNotAttempted();
-    //         if(!list.isEmpty())
-    //         {
-    //             for(Integer i : list)
-    //             {
+        // Places all correct letters without known locations.
+        for(Letter l : letters)
+        {
+            list = l.getNotAttempted();
+            if(!list.isEmpty())
+            {
+                for(Integer i : list)
+                {
                     
-    //             }
-    //         }
-    //     }
-    // }
+                }
+            }
+        }
+    }
 
     /*
      * Retrieves a specified Letter.
