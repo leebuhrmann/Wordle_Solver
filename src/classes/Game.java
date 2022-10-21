@@ -73,13 +73,6 @@ public class Game
 
 
     /*
-     * TODO: Does not set maximum occurences of a Letter properly.
-     * Needs to set max to min when no more occurences of a Letter 
-     * are found, but some occurences of a Letter are found. Currently
-     * only changes maximum to zero when zero occurrences of a Letter
-     * are found.
-     */
-    /*
      * Scores the guess.
      * 
      * If a letter was correct, and in the correct position, marks the correct position.
