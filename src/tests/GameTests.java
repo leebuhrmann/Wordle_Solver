@@ -39,7 +39,7 @@ public class GameTests
                 assertEquals(false, correct.contains(3));
                 assertEquals(false, correct.contains(4));
 
-                assertEquals(true, notAttempted.contains(0));
+                assertEquals(false, notAttempted.contains(0));
                 assertEquals(true, notAttempted.contains(1));
                 assertEquals(true, notAttempted.contains(2));
                 assertEquals(true, notAttempted.contains(3));
@@ -62,7 +62,7 @@ public class GameTests
                 assertEquals(false, correct.contains(4));
 
                 assertEquals(true, notAttempted.contains(0));
-                assertEquals(true, notAttempted.contains(1));
+                assertEquals(false, notAttempted.contains(1));
                 assertEquals(true, notAttempted.contains(2));
                 assertEquals(true, notAttempted.contains(3));
                 assertEquals(true, notAttempted.contains(4));
@@ -85,7 +85,7 @@ public class GameTests
 
                 assertEquals(true, notAttempted.contains(0));
                 assertEquals(true, notAttempted.contains(1));
-                assertEquals(true, notAttempted.contains(2));
+                assertEquals(false, notAttempted.contains(2));
                 assertEquals(true, notAttempted.contains(3));
                 assertEquals(true, notAttempted.contains(4));
                 
@@ -108,7 +108,7 @@ public class GameTests
                 assertEquals(true, notAttempted.contains(0));
                 assertEquals(true, notAttempted.contains(1));
                 assertEquals(true, notAttempted.contains(2));
-                assertEquals(true, notAttempted.contains(3));
+                assertEquals(false, notAttempted.contains(3));
                 assertEquals(true, notAttempted.contains(4));
 
                 /*
@@ -131,7 +131,7 @@ public class GameTests
                 assertEquals(true, notAttempted.contains(1));
                 assertEquals(true, notAttempted.contains(2));
                 assertEquals(true, notAttempted.contains(3));
-                assertEquals(true, notAttempted.contains(4));
+                assertEquals(false, notAttempted.contains(4));
         }
 
         @Test
@@ -159,7 +159,7 @@ public class GameTests
                 assertEquals(false, correct.contains(3));
                 assertEquals(false, correct.contains(4));
 
-                assertEquals(true, notAttempted.contains(0));
+                assertEquals(false, notAttempted.contains(0));
                 assertEquals(true, notAttempted.contains(1));
                 assertEquals(true, notAttempted.contains(2));
                 assertEquals(false, notAttempted.contains(3));
@@ -199,7 +199,7 @@ public class GameTests
 
                 assertEquals(true, notAttempted.contains(0));
                 assertEquals(true, notAttempted.contains(1));
-                assertEquals(true, notAttempted.contains(2));
+                assertEquals(false, notAttempted.contains(2));
                 assertEquals(true, notAttempted.contains(3));
                 assertEquals(true, notAttempted.contains(4));
 
@@ -220,7 +220,7 @@ public class GameTests
                 assertEquals(true, notAttempted.contains(1));
                 assertEquals(true, notAttempted.contains(2));
                 assertEquals(true, notAttempted.contains(3));
-                assertEquals(true, notAttempted.contains(4));
+                assertEquals(false, notAttempted.contains(4));
         }
 
         @Test
@@ -250,7 +250,7 @@ public class GameTests
 
                 assertEquals(true, notAttempted.contains(0));
                 assertEquals(true, notAttempted.contains(1));
-                assertEquals(true, notAttempted.contains(2));
+                assertEquals(false, notAttempted.contains(2));
                 assertEquals(false, notAttempted.contains(3));
                 assertEquals(false, notAttempted.contains(4));
         
@@ -350,7 +350,7 @@ public class GameTests
                 assertEquals(false, correct.contains(3));
                 assertEquals(false, correct.contains(4));
 
-                assertEquals(true, notAttempted.contains(0));
+                assertEquals(false, notAttempted.contains(0));
                 assertEquals(true, notAttempted.contains(1));
                 assertEquals(true, notAttempted.contains(2));
                 assertEquals(true, notAttempted.contains(3));
@@ -370,9 +370,9 @@ public class GameTests
                 assertEquals(false, correct.contains(4));
 
                 assertEquals(true, notAttempted.contains(0));
-                assertEquals(true, notAttempted.contains(1));
+                assertEquals(false, notAttempted.contains(1));
                 assertEquals(true, notAttempted.contains(2));
-                assertEquals(true, notAttempted.contains(3));
+                assertEquals(false, notAttempted.contains(3));
                 assertEquals(true, notAttempted.contains(4));
 
                 letter = g1.getLetter('C');
@@ -390,7 +390,7 @@ public class GameTests
 
                 assertEquals(true, notAttempted.contains(0));
                 assertEquals(true, notAttempted.contains(1));
-                assertEquals(true, notAttempted.contains(2));
+                assertEquals(false, notAttempted.contains(2));
                 assertEquals(true, notAttempted.contains(3));
                 assertEquals(true, notAttempted.contains(4));
 

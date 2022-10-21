@@ -115,6 +115,8 @@ public class Game
                 }
             }
 
+            temp.attempted(i);
+
             if(occured)
             {
                 if(occurrences > letters.get(guessChArr[i] - 65).getMinOcc())
@@ -129,11 +131,9 @@ public class Game
                 if(inPlace)
                 {
                     temp.addCorrect(i);
+
                 }
-                else
-                {
-                    temp.removeIncorrect(i);
-                }
+                
             } 
             else
             {

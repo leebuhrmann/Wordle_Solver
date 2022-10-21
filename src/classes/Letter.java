@@ -72,7 +72,10 @@ public class Letter {
         return correctPlacement;
     }
 
-    public void removeIncorrect(Integer placement)
+    /*
+     * Removes the passed placement from the notAttempted list.
+     */
+    public void attempted(Integer placement)
     {
         notAttemptedPlacements.remove(placement);
     }
