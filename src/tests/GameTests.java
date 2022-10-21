@@ -18,6 +18,7 @@ public class GameTests
                 File weightedListFile = new File("src/Weighted_Wordle_List.txt");
                 ArrayList<Integer> correct;
                 ArrayList<Integer> incorrect;
+                Letter letter;
 
                 Game g1 = new Game(dictionary, weightedListFile
                                         , "Stalk", "Stall");
@@ -26,12 +27,12 @@ public class GameTests
                 /*
                  * Testing Letter object 'S'
                  */
-                Letter s = g1.getLetter('S');
-                assertEquals('S', s.getLett());
-                assertEquals(1, s.getMinOcc());
-                assertEquals(5, s.getMaxOcc());
-                correct = s.getCorrect();
-                incorrect = s.getIncorrect();
+                letter = g1.getLetter('S');
+                assertEquals('S', letter.getLett());
+                assertEquals(1, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(true, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -48,12 +49,12 @@ public class GameTests
                 /*
                  * Testing Letter object 'T'
                  */
-                Letter t = g1.getLetter('T');
-                assertEquals('T', t.getLett());
-                assertEquals(1, t.getMinOcc());
-                assertEquals(5, t.getMaxOcc());
-                correct = t.getCorrect();
-                incorrect = t.getIncorrect();
+                letter = g1.getLetter('T');
+                assertEquals('T', letter.getLett());
+                assertEquals(1, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(true, correct.contains(1));
@@ -70,12 +71,12 @@ public class GameTests
                 /*
                  * Testing Letter object 'A'
                  */
-                Letter a = g1.getLetter('A');
-                assertEquals('A', a.getLett());
-                assertEquals(1, a.getMinOcc());
-                assertEquals(5, a.getMaxOcc());
-                correct = a.getCorrect();
-                incorrect = a.getIncorrect();
+                letter = g1.getLetter('A');
+                assertEquals('A', letter.getLett());
+                assertEquals(1, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -92,12 +93,12 @@ public class GameTests
                 /*
                  * Testing Letter object 'L'
                  */
-                Letter l = g1.getLetter('L');
-                assertEquals('L', l.getLett());
-                assertEquals(1, l.getMinOcc());
-                assertEquals(5, l.getMaxOcc());
-                correct = l.getCorrect();
-                incorrect = l.getIncorrect();
+                letter = g1.getLetter('L');
+                assertEquals('L', letter.getLett());
+                assertEquals(1, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -114,12 +115,12 @@ public class GameTests
                 /*
                  * Testing Letter object 'K'
                  */
-                Letter k = g1.getLetter('K');
-                assertEquals('K', k.getLett());
-                assertEquals(0, k.getMinOcc());
-                assertEquals(0, k.getMaxOcc());
-                correct = k.getCorrect();
-                incorrect = k.getIncorrect();
+                letter = g1.getLetter('K');
+                assertEquals('K', letter.getLett());
+                assertEquals(0, letter.getMinOcc());
+                assertEquals(0, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -141,17 +142,18 @@ public class GameTests
                 File weightedListFile = new File("src/Weighted_Wordle_List.txt");
                 ArrayList<Integer> correct;
                 ArrayList<Integer> incorrect;
+                Letter letter;
 
                 Game g1 = new Game(dictionary, weightedListFile
                                         , "Vinve", "Voviv");
                 g1.score();
 
-                Letter v = g1.getLetter('V');
-                assertEquals('V', v.getLett());
-                assertEquals(2, v.getMinOcc());
-                assertEquals(5, v.getMaxOcc());
-                correct = v.getCorrect();
-                incorrect = v.getIncorrect();
+                letter = g1.getLetter('V');
+                assertEquals('V', letter.getLett());
+                assertEquals(2, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(true, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -165,12 +167,12 @@ public class GameTests
                 assertEquals(true, incorrect.contains(3));
                 assertEquals(false, incorrect.contains(4));  
                 
-                Letter i = g1.getLetter('I');
-                assertEquals('I', i.getLett());
-                assertEquals(1, i.getMinOcc());
-                assertEquals(5, i.getMaxOcc());
-                correct = i.getCorrect();
-                incorrect = i.getIncorrect();
+                letter = g1.getLetter('I');
+                assertEquals('I', letter.getLett());
+                assertEquals(1, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -184,12 +186,12 @@ public class GameTests
                 assertEquals(false, incorrect.contains(3));
                 assertEquals(false, incorrect.contains(4));
 
-                Letter n = g1.getLetter('N');
-                assertEquals('N', n.getLett());
-                assertEquals(0, n.getMinOcc());
-                assertEquals(0, n.getMaxOcc());
-                correct = n.getCorrect();
-                incorrect = n.getIncorrect();
+                letter = g1.getLetter('N');
+                assertEquals('N', letter.getLett());
+                assertEquals(0, letter.getMinOcc());
+                assertEquals(0, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -203,12 +205,12 @@ public class GameTests
                 assertEquals(false, incorrect.contains(3));
                 assertEquals(false, incorrect.contains(4));
 
-                Letter e = g1.getLetter('E');
-                assertEquals('E', e.getLett());
-                assertEquals(0, e.getMinOcc());
-                assertEquals(0, e.getMaxOcc());
-                correct = e.getCorrect();
-                incorrect = e.getIncorrect();
+                letter = g1.getLetter('E');
+                assertEquals('E', letter.getLett());
+                assertEquals(0, letter.getMinOcc());
+                assertEquals(0, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -230,17 +232,18 @@ public class GameTests
                 File weightedListFile = new File("src/Weighted_Wordle_List.txt");
                 ArrayList<Integer> correct;
                 ArrayList<Integer> incorrect;
+                Letter letter;
 
                 Game g1 = new Game(dictionary, weightedListFile
                                         , "Oovvv", "Vvvoo");
                 g1.score();
 
-                Letter v = g1.getLetter('V');
-                assertEquals('V', v.getLett());
-                assertEquals(3, v.getMinOcc());
-                assertEquals(5, v.getMaxOcc());
-                correct = v.getCorrect();
-                incorrect = v.getIncorrect();
+                letter = g1.getLetter('V');
+                assertEquals('V', letter.getLett());
+                assertEquals(3, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -254,12 +257,12 @@ public class GameTests
                 assertEquals(true, incorrect.contains(3));
                 assertEquals(true, incorrect.contains(4));
         
-                Letter o = g1.getLetter('O');
-                assertEquals('O', o.getLett());
-                assertEquals(2, o.getMinOcc());
-                assertEquals(5, o.getMaxOcc());
-                correct = o.getCorrect();
-                incorrect = o.getIncorrect();
+                letter = g1.getLetter('O');
+                assertEquals('O', letter.getLett());
+                assertEquals(2, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -281,17 +284,18 @@ public class GameTests
                 File weightedListFile = new File("src/Weighted_Wordle_List.txt");
                 ArrayList<Integer> correct;
                 ArrayList<Integer> incorrect;
+                Letter letter;
 
                 Game g1 = new Game(dictionary, weightedListFile
                                         , "Ovovo", "Vovov");
                 g1.score();
 
-                Letter v = g1.getLetter('V');
-                assertEquals('V', v.getLett());
-                assertEquals(2, v.getMinOcc());
-                assertEquals(5, v.getMaxOcc());
-                correct = v.getCorrect();
-                incorrect = v.getIncorrect();
+                letter = g1.getLetter('V');
+                assertEquals('V', letter.getLett());
+                assertEquals(2, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -305,12 +309,12 @@ public class GameTests
                 assertEquals(true, incorrect.contains(3));
                 assertEquals(false, incorrect.contains(4));
         
-                Letter o = g1.getLetter('O');
-                assertEquals('O', o.getLett());
-                assertEquals(2, o.getMinOcc());
-                assertEquals(5, o.getMaxOcc());
-                correct = o.getCorrect();
-                incorrect = o.getIncorrect();
+                letter = g1.getLetter('O');
+                assertEquals('O', letter.getLett());
+                assertEquals(2, letter.getMinOcc());
+                assertEquals(2, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
 
                 assertEquals(false, correct.contains(0));
                 assertEquals(false, correct.contains(1));
@@ -323,5 +327,95 @@ public class GameTests
                 assertEquals(true, incorrect.contains(2));
                 assertEquals(false, incorrect.contains(3));
                 assertEquals(true, incorrect.contains(4)); 
+        }
+
+        @Test
+        public void AbcbdDbcbe()
+        {
+                File dictionary = new File("src/Wordle_Dictionary.txt");
+                File weightedListFile = new File("src/Weighted_Wordle_List.txt");
+                ArrayList<Integer> correct;
+                ArrayList<Integer> incorrect;
+                Letter letter;
+
+                Game g1 = new Game(dictionary, weightedListFile
+                                        , "Abcbd", "Dbcbe");
+                g1.score();
+
+                letter = g1.getLetter('A');
+                assertEquals('A', letter.getLett());
+                assertEquals(0, letter.getMinOcc());
+                assertEquals(0, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
+
+                assertEquals(false, correct.contains(0));
+                assertEquals(false, correct.contains(1));
+                assertEquals(false, correct.contains(2));
+                assertEquals(false, correct.contains(3));
+                assertEquals(false, correct.contains(4));
+
+                assertEquals(false, incorrect.contains(0));
+                assertEquals(false, incorrect.contains(1));
+                assertEquals(false, incorrect.contains(2));
+                assertEquals(false, incorrect.contains(3));
+                assertEquals(false, incorrect.contains(4));
+                
+                letter = g1.getLetter('B');
+                assertEquals('B', letter.getLett());
+                assertEquals(2, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
+
+                assertEquals(false, correct.contains(0));
+                assertEquals(true, correct.contains(1));
+                assertEquals(false, correct.contains(2));
+                assertEquals(true, correct.contains(3));
+                assertEquals(false, correct.contains(4));
+
+                assertEquals(false, incorrect.contains(0));
+                assertEquals(false, incorrect.contains(1));
+                assertEquals(false, incorrect.contains(2));
+                assertEquals(false, incorrect.contains(3));
+                assertEquals(false, incorrect.contains(4));
+
+                letter = g1.getLetter('C');
+                assertEquals('C', letter.getLett());
+                assertEquals(1, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
+
+                assertEquals(false, correct.contains(0));
+                assertEquals(false, correct.contains(1));
+                assertEquals(true, correct.contains(2));
+                assertEquals(false, correct.contains(3));
+                assertEquals(false, correct.contains(4));
+
+                assertEquals(false, incorrect.contains(0));
+                assertEquals(false, incorrect.contains(1));
+                assertEquals(false, incorrect.contains(2));
+                assertEquals(false, incorrect.contains(3));
+                assertEquals(false, incorrect.contains(4));
+
+                letter = g1.getLetter('D');
+                assertEquals('D', letter.getLett());
+                assertEquals(1, letter.getMinOcc());
+                assertEquals(5, letter.getMaxOcc());
+                correct = letter.getCorrect();
+                incorrect = letter.getIncorrect();
+
+                assertEquals(false, correct.contains(0));
+                assertEquals(false, correct.contains(1));
+                assertEquals(false, correct.contains(2));
+                assertEquals(false, correct.contains(3));
+                assertEquals(false, correct.contains(4));
+
+                assertEquals(false, incorrect.contains(0));
+                assertEquals(false, incorrect.contains(1));
+                assertEquals(false, incorrect.contains(2));
+                assertEquals(false, incorrect.contains(3));
+                assertEquals(true, incorrect.contains(4));
         }
 }

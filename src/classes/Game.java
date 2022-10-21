@@ -72,7 +72,13 @@ public class Game
     }
 
 
-    //TODO: doesn't work
+    /*
+     * TODO: Does not set maximum occurences of a Letter properly.
+     * Needs to set max to min when no more occurences of a Letter 
+     * are found, but some occurences of a Letter are found. Currently
+     * only changes maximum to zero when zero occurrences of a Letter
+     * are found.
+     */
     /*
      * Scores the guess.
      * 
@@ -130,6 +136,7 @@ public class Game
                 temp.setMaxOcc(0);
             }
 
+            occurrences = 0;
             occured = false;
             inPlace = false;
         }
