@@ -19,6 +19,7 @@ public class Game
     private int[] p5Weights = new int[26];
     private ArrayList<String> wordList = new ArrayList<String>();
     private ArrayList<String> guessHistory;
+    private ArrayList<Integer> occupiedPlacements;
 
     /*
      * Game and Score fields.
@@ -55,9 +56,10 @@ public class Game
             dictionary = dictionaryIn;
             weightedListFile = weightedListFileIn;
             guessHistory = new ArrayList<String>();
-    
-            fillLetters();
+            occupiedPlacements = new ArrayList<Integer>();
+            
             collectWeightData();
+            fillLetters();
             parseDictionary();
         }
         catch(FileNotFoundException fnfe)
@@ -70,15 +72,15 @@ public class Game
      * Has the computer play the game by itslef. Returns the number of
      * guesses it took to find the correct answer.
      */
-    public int botPlay()
-    {
-        while(guessHistory.get(guessHistory.size() - 1) != answer)
-        {
-            score(makeGuess());
-        }
+    // public int botPlay()
+    // {
+    //     while(guessHistory.get(guessHistory.size() - 1) != answer)
+    //     {
+    //         score(makeGuess());
+    //     }
 
-        return guessHistory.size();
-    }
+    //     return guessHistory.size();
+    // }
 
     /*
      * Scores the guess.
@@ -131,7 +133,10 @@ public class Game
                 if(inPlace)
                 {
                     temp.addCorrect(i);
-
+                    if(!occupiedPlacements.contains(i))
+                    {
+                        occupiedPlacements.add(i);
+                    }
                 }
                 
             } 
@@ -153,6 +158,7 @@ public class Game
     {
         char[] guess = new char[5];
         ArrayList<Integer> list;
+        int[] sortedList;
 
         // Places all correct letters with known locations.
         for(Letter l : letters)
@@ -167,15 +173,15 @@ public class Game
             }
         }
 
+        // TODO: Make this a recursive funtion
         // Places all correct letters without known locations.
         for(Letter l : letters)
         {
-            list = l.getNotAttempted();
-            if(!list.isEmpty())
+            sortedList = l.getSorted();
+            for(Integer i : sortedList)
             {
-                for(Integer i : list)
+                if(!occupiedPlacements.contains(i) && l.getNotAttempted().contains(i))
                 {
-                    
                 }
             }
         }
@@ -197,8 +203,15 @@ public class Game
     {
         for(int i = 0; i < 26; i++)
         {
+            int[] weightsOut = new int[5];
+            weightsOut[0] = p1Weights[i];
+            weightsOut[1] = p2Weights[i];
+            weightsOut[2] = p3Weights[i];
+            weightsOut[3] = p4Weights[i];
+            weightsOut[4] = p5Weights[i];
+
             char cOut = (char)(i + 65);
-            letters.add(new Letter(cOut));
+            letters.add(new Letter(cOut, weightsOut));
         }
     }
 
