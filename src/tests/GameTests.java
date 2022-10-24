@@ -413,4 +413,12 @@ public class GameTests
                 assertEquals(true, notAttempted.contains(3));
                 assertEquals(false, notAttempted.contains(4));
         }
+
+        @Test
+        public void LetterTest()
+        {
+                int[] weights = {141,304,307,163,64};
+                Letter l = new Letter('A', weights);
+        }
+
 }

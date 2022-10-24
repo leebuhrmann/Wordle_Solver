@@ -8,8 +8,8 @@ public class Letter {
     private char lett;
     private ArrayList<Integer> correctPlacement;
     private ArrayList<Integer> notAttemptedPlacements;
-    private int[] weightedPlacements;       // The number of occurences of this letter at a specific placment. The placement is the index.
-    private int[] sortedPlacements;   // The most common placement of this letter determined by its weighted values, ordered by most common to least common.
+    private ArrayList<Integer> weightedPlacements;       // The number of occurences of this letter at a specific placment. The placement is the index.
+    private ArrayList<Integer> sortedPlacements;   // The most common placement of this letter determined by its weighted values, ordered by most common to least common.
     
 
     public Letter(char lettIn, int[] weightsIn)
@@ -24,32 +24,37 @@ public class Letter {
             notAttemptedPlacements.add(i);
         }
 
-        weightedPlacements = weightsIn;
-        sortedPlacements = new int[5];
+        weightedPlacements = new ArrayList<Integer>();
         for(int i = 0; i < 5; i++)
         {
-            sortedPlacements[i] = i;
+            weightedPlacements.add(weightsIn[i]);
+        }
+        sortedPlacements = new ArrayList<Integer>();
+        for(int i = 0; i < 5; i++)
+        {
+            sortedPlacements.add(i);
         }
         orderPlacements();
     }
 
     private void orderPlacements()
     {
-        int n = weightedPlacements.length;
+        //bubble sort
+        int n = weightedPlacements.size();
         for (int i = 0; i < n - 1; i++)
         {
             for (int j = 0; j < n - i - 1; j++)
             {
-                if (weightedPlacements[j] < weightedPlacements[j + 1])
+                if (weightedPlacements.get(j) < weightedPlacements.get(j + 1))
                 {
                     // swap arr[j+1] and arr[j]
-                    int temp = weightedPlacements[j];
-                    weightedPlacements[j] = weightedPlacements[j + 1];
-                    weightedPlacements[j + 1] = temp;
+                    int temp = weightedPlacements.get(j);
+                    weightedPlacements.set(j, weightedPlacements.get(j + 1));
+                    weightedPlacements.set(j + 1, temp);
 
-                    temp = sortedPlacements[j];
-                    sortedPlacements[j] = sortedPlacements[j + 1];
-                    sortedPlacements[j + 1] = temp;
+                    temp = sortedPlacements.get(j);
+                    sortedPlacements.set(j, sortedPlacements.get(j + 1));
+                    sortedPlacements.set(j + 1, temp);
                 }
             }
         }
@@ -57,12 +62,12 @@ public class Letter {
         System.out.println(this.getLett());
         for(int i = 0; i < 5; i++)
         {
-            System.out.print(" " + weightedPlacements[i]);
+            System.out.print(" " + weightedPlacements.get(i));
         }
         System.out.println();
         for(int i = 0; i < 5; i ++)
         {
-            System.out.print(" " + sortedPlacements[i]);
+            System.out.print(" " + sortedPlacements.get(i));
         }
         System.out.println();
     }
@@ -115,7 +120,7 @@ public class Letter {
         return notAttemptedPlacements;
     }
 
-    public int[] getSorted()
+    public ArrayList<Integer> getSorted()
     {
         return sortedPlacements;
     }

@@ -19,7 +19,7 @@ public class Game
     private int[] p5Weights = new int[26];
     private ArrayList<String> wordList = new ArrayList<String>();
     private ArrayList<String> guessHistory;
-    private ArrayList<Integer> occupiedPlacements;
+    private ArrayList<Character> currentGuess;
 
     /*
      * Game and Score fields.
@@ -56,7 +56,7 @@ public class Game
             dictionary = dictionaryIn;
             weightedListFile = weightedListFileIn;
             guessHistory = new ArrayList<String>();
-            occupiedPlacements = new ArrayList<Integer>();
+            currentGuess = new ArrayList<Character>(5);
             
             collectWeightData();
             fillLetters();
@@ -65,6 +65,7 @@ public class Game
         catch(FileNotFoundException fnfe)
         {
             System.out.println("File was not found!");
+            fnfe.printStackTrace();
         }
     }
 
@@ -133,10 +134,6 @@ public class Game
                 if(inPlace)
                 {
                     temp.addCorrect(i);
-                    if(!occupiedPlacements.contains(i))
-                    {
-                        occupiedPlacements.add(i);
-                    }
                 }
                 
             } 
@@ -154,37 +151,49 @@ public class Game
     }
 
 
-    public String makeGuess()
+    // public String makeGuess()
+    // {  
+    //     // Places all correct letters with known locations.
+    //     for(Letter l : letters)
+    //     {
+    //         ArrayList<Integer> list = l.getCorrect();
+    //         if(!list.isEmpty())
+    //         {
+    //             for(Integer i : list)
+    //             {
+    //                 currentGuess.set(i, l.getLett());
+    //             }
+    //         }
+    //     }
+
+    //     // find all letters with unknown locations but are in the word.
+    //     ArrayList<Letter> toPlace = new ArrayList<Letter>();
+    //     for(Letter l : letters)
+    //     {
+    //         if(l.getMinOcc() > 0)
+    //         {
+    //             for(int i = 0; i < l.getMinOcc() - l.getCorrect().size(); i++ )
+    //             {
+    //                 toPlace.add(l);
+    //             }
+    //         }
+    //     }
+
+
+    // }
+
+    private char[] unknownPlacement(char[] guessIn, ArrayList<Letter> toPlaceIn)
     {
-        char[] guess = new char[5];
-        ArrayList<Integer> list;
-        int[] sortedList;
-
-        // Places all correct letters with known locations.
-        for(Letter l : letters)
+        Letter l = toPlaceIn.get(0);
+        for(Integer i : l.getSorted())
         {
-            list = l.getCorrect();
-            if(!list.isEmpty())
+            if(currentGuess.get(i) == null)
             {
-                for(Integer i : list)
-                {
-                    guess[i] = l.getLett();
-                }
+                
             }
         }
 
-        // TODO: Make this a recursive funtion
-        // Places all correct letters without known locations.
-        for(Letter l : letters)
-        {
-            sortedList = l.getSorted();
-            for(Integer i : sortedList)
-            {
-                if(!occupiedPlacements.contains(i) && l.getNotAttempted().contains(i))
-                {
-                }
-            }
-        }
+        return null;
     }
 
     /*
