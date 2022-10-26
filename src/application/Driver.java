@@ -1,12 +1,11 @@
 package application;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import classes.Game;
 
 public class Driver 
 {
-    public static void main(String[] args) throws FileNotFoundException
+    public static void main(String[] args)
     {
         Game guesser = new Game(new File("src/Wordle_Dictionary.txt")
                                     , new File("src/Weighted_Wordle_List.txt")
