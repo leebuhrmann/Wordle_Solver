@@ -1,11 +1,12 @@
 package tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import org.junit.Test;
+
 import classes.Game;
 import classes.Letter;
 
@@ -14,8 +15,10 @@ public class GameTests
         @Test
         public void StalkStall()
         {
-                File dictionary = new File("src/Wordle_Dictionary.txt");
-                File weightedListFile = new File("src/Weighted_Wordle_List.txt");
+                System.out.println("***" + System.getProperty("user.dir"));
+                
+                File dictionary = new File("ProjectRoot/src/Wordle_Dictionary.txt");
+                File weightedListFile = new File("ProjectRoot/src/Weighted_Wordle_List.txt");
                 ArrayList<Integer> correct;
                 ArrayList<Integer> notAttempted;
                 Letter letter;

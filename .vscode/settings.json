@@ -1,7 +1,27 @@
 {
-    "java.project.sourcePaths": ["src"],
-    "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+
+    "java.test.config": [
+        {
+            "name": "myConfiguration",
+            "workingDirectory": "${/Users/Lee/Documents/GitHub/Wordle_Solver}",
+            "java.project.sourcePaths": ["src"],
+            "java.project.outputPath": "bin",
+            "java.project.referencedLibraries": [
+            "lib/**/*.jar"],
+        },
+        {
+            "name": "myConfiguration2",
+            "workingDirectory": "$/Users/Lee/Documents/GitHub/Wordle_Solver",
+            "java.project.sourcePaths": ["src"],
+            "java.project.outputPath": "bin",
+            "java.project.referencedLibraries": [
+            "lib/**/*.jar"],
+        }
     ]
+
+    //original settings
+    //"java.project.sourcePaths": ["src"],
+    //"java.project.outputPath": "bin",
+    //"java.project.referencedLibraries": [
+    //"lib/**/*.jar"],
 }
