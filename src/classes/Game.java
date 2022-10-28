@@ -355,8 +355,6 @@ public class Game
 
     /*
      * Prints current game results.
-     * TODO: does not properly print results. When a letter is present
-     * it will mark all letters in the guess as correct and not the exact amount.
      */
     public void printGame()
     {
