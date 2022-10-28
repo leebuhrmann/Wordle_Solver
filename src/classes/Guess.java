@@ -1,38 +1,22 @@
 package classes;
 public class Guess {
 
-    private char[] placement;
+    private String guess;
+    private String score;
 
-    public Guess()
+    public Guess(String guessIn, String scoreIn)
     {
-        placement[0] = '!';
-        placement[1] = '!';
-        placement[2] = '!';
-        placement[3] = '!';
-        placement[4] = '!';
-     }
-
-    public Guess(char p1, char p2, char p3, char p4, char p5)
-    {
-        placement[0] = p1;
-        placement[1] = p2;
-        placement[2] = p3;
-        placement[3] = p4;
-        placement[4] = p5;
+        guess = guessIn;
+        score = scoreIn;
     }
 
-    public char getPlacement(int pIn)
+    public String getGuess()
     {
-        return placement[pIn];
+        return guess;
     }
 
-    public void setPlacement (int pIn, char lettIn)
+    public String getScore()
     {
-        placement[pIn] = lettIn;
-    }
-
-    public char[] getGuess()
-    {
-        return placement;
+        return score;
     }
 }

@@ -36,14 +36,16 @@ public class Driver
 
             if(selection.equals("1"))
             {
-                Game game = new Game(dictionaryFile, weightedListFile);
+                Game game = new Game(dictionaryFile, weightedListFile, "Stall");
                 while(!game.completed())
                 {
                     System.out.println("\nGuess a five letter word: ");
-                    while(!game.score(guess = in.next()))
+                    guess = in.next();
+                    while(!game.score(guess))
                     {
                         System.out.println("\n" + guess + " is not a five letter word."
                                            + "\nGuess a five letter word: ");
+                        guess = in.next();
                     }
                     game.printGame();
                 }
@@ -65,7 +67,7 @@ public class Driver
             }
         }
 
-        System.out.println("Thanks for playing!\n");
+        System.out.println("\nThanks for playing!\n");
         System.exit(0);
     }
 

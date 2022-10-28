@@ -19,7 +19,7 @@ public class Game
     private int[] p4Weights;
     private int[] p5Weights; 
     private ArrayList<String> wordList;
-    private ArrayList<String> guessHistory;
+    private ArrayList<Guess> guessHistory;
     private ArrayList<Character> currentGuess;
 
     /*
@@ -54,7 +54,7 @@ public class Game
 
     private void constructorHelper(File dictionaryIn, File weightedListFileIn, String answerIn)
     {
-        guessHistory = new ArrayList<String>();
+        guessHistory = new ArrayList<Guess>();
         currentGuess = new ArrayList<Character>(5);
         p1Weights = new int[26];
         p2Weights = new int[26];
@@ -102,21 +102,18 @@ public class Game
      * If a letter was correct, but in the incorrect position, marks the incorrect position.
      * If the letter was in the answer, marks the minimum number of occurrences it is aware of.
      * If the letter was not in the word, marks the maximum number of occurrences as 0.
-     * 
-     * TODO: Expects correct input.
-     * Change so it returns a boolean variable.
-     * If the guess is not a word or not the correct amount of letters, return false.
-     * If the guess is of the correct format, score appropiatly and return true.
      */
     public boolean score(String guessIn)
     {
         String guess = guessIn.toUpperCase();
         char[] guessChArr = guess.toCharArray();
+        String score = "";
+        String concat = "";
 
         int occurrences = 0;
         boolean occured = false;
         boolean inPlace = false;
-        boolean retFlag =false;
+        boolean retFlag = false;
 
         if(guessIn.length() == 5
             && wordList.contains(guess))
@@ -144,33 +141,38 @@ public class Game
 
                 if(occured)
                 {
-                    if(occurrences > letters.get(guessChArr[i] - 65).getMinOcc())
+                    if(occurrences > letters.get(guessChArr[i] - 65).getMinOcc())    // if the letter has occured more then the amount it is currently aware of
                     {
                         temp.incrementMinOcc();
+                        concat = "I";
                     }
-                    else
+                    else    // if the letter has occured, but not more then the letter is aware of
                     {
                         temp.setMaxOcc(temp.getMinOcc());
+                        concat = "X";
                     }
 
-                    if(inPlace)
+                    if(inPlace)    // if the letter in guess occured in that exact location
                     {
                         temp.addCorrect(i);
+                        concat = "Y";
                     }
                     
                 } 
-                else
+                else       // if the letter in guess did not occure in the answer at all
                 {
                     temp.setMaxOcc(0);
+                    concat = "X";
                 }
 
                 occurrences = 0;
                 occured = false;
                 inPlace = false;
+                score = score.concat(concat);
             }
             
             if(guess.equals(answer)) completed = true;
-            guessHistory.add(guess);
+            guessHistory.add(new Guess(guess, score));
 
             retFlag = true;
         }
@@ -359,27 +361,10 @@ public class Game
     public void printGame()
     {
         System.out.println();
-        for(String s : guessHistory)
+        for(Guess g : guessHistory)
         {
-            System.out.println(s);
-            char[] arr = s.toCharArray();
-            for(int i = 0; i < 5; i++)
-            {
-                char c = Character.toUpperCase(arr[i]);
-                Letter l = letters.get(c - 65);
-                if(l.getCorrect().contains(i))
-                {
-                    System.out.print("Y");
-                }
-                else if(l.getMinOcc() > 0)
-                {
-                    System.out.print("I");
-                }
-                else
-                {
-                    System.out.print("X");
-                }
-            }
+            System.out.println(g.getGuess());
+            System.out.println(g.getScore());
             System.out.println();
         }
     }
