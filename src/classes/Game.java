@@ -108,7 +108,7 @@ public class Game
      * If the guess is not a word or not the correct amount of letters, return false.
      * If the guess is of the correct format, score appropiatly and return true.
      */
-    public void score(String guessIn)
+    public boolean score(String guessIn)
     {
         String guess = guessIn.toUpperCase();
         char[] guessChArr = guess.toCharArray();
@@ -116,57 +116,66 @@ public class Game
         int occurrences = 0;
         boolean occured = false;
         boolean inPlace = false;
+        boolean retFlag =false;
 
-        for(int i = 0; i < 5; i++)      //guessChArr
-        {  
-            Letter temp = letters.get(guessChArr[i] - 65);
+        if(guessIn.length() == 5
+            && wordList.contains(guess))
+        {
 
-            for(int j = 0; j < 5; j++)  //answerChArr
-            {
-                if(guessChArr[i] == answerChArr[j])
+            for(int i = 0; i < 5; i++)      //guessChArr
+            {  
+                Letter temp = letters.get(guessChArr[i] - 65);
+
+                for(int j = 0; j < 5; j++)  //answerChArr
                 {
-                    if(i == j)
+                    if(guessChArr[i] == answerChArr[j])
                     {
-                        inPlace = true;
+                        if(i == j)
+                        {
+                            inPlace = true;
+                        }
+                        
+                        occured = true;
+                        occurrences++;
+                    }
+                }
+
+                temp.attempted(i);
+
+                if(occured)
+                {
+                    if(occurrences > letters.get(guessChArr[i] - 65).getMinOcc())
+                    {
+                        temp.incrementMinOcc();
+                    }
+                    else
+                    {
+                        temp.setMaxOcc(temp.getMinOcc());
+                    }
+
+                    if(inPlace)
+                    {
+                        temp.addCorrect(i);
                     }
                     
-                    occured = true;
-                    occurrences++;
-                }
-            }
-
-            temp.attempted(i);
-
-            if(occured)
-            {
-                if(occurrences > letters.get(guessChArr[i] - 65).getMinOcc())
-                {
-                    temp.incrementMinOcc();
-                }
+                } 
                 else
                 {
-                    temp.setMaxOcc(temp.getMinOcc());
+                    temp.setMaxOcc(0);
                 }
 
-                if(inPlace)
-                {
-                    temp.addCorrect(i);
-                }
-                
-            } 
-            else
-            {
-                temp.setMaxOcc(0);
+                occurrences = 0;
+                occured = false;
+                inPlace = false;
             }
+            
+            if(guess.equals(answer)) completed = true;
+            guessHistory.add(guess);
 
-            occurrences = 0;
-            occured = false;
-            inPlace = false;
+            retFlag = true;
         }
         
-        if(guess.equals(answer)) completed = true;
-
-        guessHistory.add(guess);
+        return retFlag;
     }
 
     /*

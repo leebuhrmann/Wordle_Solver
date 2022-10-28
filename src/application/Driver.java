@@ -17,6 +17,7 @@ public class Driver
 
         Scanner in = new Scanner(System.in);
         String selection;
+        String guess;
         boolean playAgain = true;
 
         /*
@@ -39,7 +40,11 @@ public class Driver
                 while(!game.completed())
                 {
                     System.out.println("\nGuess a five letter word: ");
-                    game.score(in.next()); // TODO: change to while loop expecting a returned false value from game.score(). Asks user to enter a proper guess. Requires to change score() first.
+                    while(!game.score(guess = in.next()))
+                    {
+                        System.out.println("\n" + guess + " is not a five letter word."
+                                           + "\nGuess a five letter word: ");
+                    }
                     game.printGame();
                 }
             }
