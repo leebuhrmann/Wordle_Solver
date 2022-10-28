@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-import javax.lang.model.util.ElementScanner14;
-
 public class Game
 {
     //TODO: get rid of magic numbers
@@ -172,7 +170,7 @@ public class Game
     }
 
     /*
-     * 
+     * TODO: in developement
      */
     public void makeGuess()
     {  
@@ -378,9 +376,9 @@ public class Game
     }
 
     /*
-     * Prints the current score of the game.
+     * Prints the all Letters and their data.
      */
-    public void printScore()
+    public void printLetters()
     {
         System.out.println("\nGuess: " + guessHistory.get(guessHistory.size() - 1) + "\nAnswer: " + answer);
 
