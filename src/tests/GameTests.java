@@ -10,6 +10,7 @@ import org.junit.Test;
 import classes.Game;
 import classes.Letter;
 
+//TODO: this whole damn thing doesn't work. Check https://stackoverflow.com/questions/74201115/filenotfoundexception-during-junit-tests-but-not-when-running-the-actual-app
 public class GameTests
 {
         @Test
