@@ -5,58 +5,72 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.lang.model.util.ElementScanner14;
+
 public class Game
 {
+    //TODO: get rid of magic numbers
     /*
     * File data.
     */
     private File dictionary;
     private File weightedListFile;
-    private int[] p1Weights = new int[26];
-    private int[] p2Weights = new int[26];
-    private int[] p3Weights = new int[26];
-    private int[] p4Weights = new int[26];
-    private int[] p5Weights = new int[26];
-    private ArrayList<String> wordList = new ArrayList<String>();
+    private int[] p1Weights;
+    private int[] p2Weights;
+    private int[] p3Weights;
+    private int[] p4Weights;
+    private int[] p5Weights; 
+    private ArrayList<String> wordList;
     private ArrayList<String> guessHistory;
     private ArrayList<Character> currentGuess;
 
     /*
      * Game and Score fields.
      */
+    private boolean completed;
     private String answer;
     private char[] answerChArr;
-    private ArrayList<Letter> letters = new ArrayList<Letter>();
+    private ArrayList<Letter> letters;
 
     /*
-     * Creates a 
+     * Creates a game with a random answer.
      */
     public Game(File dictionaryIn, File weightedListFileIn) 
     {
-        constructorHelper(dictionaryIn, weightedListFileIn);
-
+        constructorHelper(dictionaryIn, weightedListFileIn, answer);
         Random rand = new Random();
         answer = wordList.get(rand.nextInt(2315));
         answer = answer.toUpperCase();
         answerChArr = answer.toCharArray();
     }
 
+    /*
+     * Creates a game with a specified answer.
+     */
     public Game(File dictionaryIn, File weightedListFileIn, String answerIn)
     {
-        constructorHelper(dictionaryIn, weightedListFileIn);
-        
+        constructorHelper(dictionaryIn, weightedListFileIn, answerIn);
         answer = answerIn.toUpperCase();
         answerChArr = answer.toCharArray();
     }
 
-    private void constructorHelper(File dictionaryIn, File weightedListFileIn)
+    private void constructorHelper(File dictionaryIn, File weightedListFileIn, String answerIn)
     {
+        guessHistory = new ArrayList<String>();
+        currentGuess = new ArrayList<Character>(5);
+        p1Weights = new int[26];
+        p2Weights = new int[26];
+        p3Weights = new int[26];
+        p4Weights = new int[26];
+        p5Weights = new int[26];
+        wordList = new ArrayList<String>();
+        letters = new ArrayList<Letter>();
+        completed = false;
+
         try
         {
             dictionary = dictionaryIn;
             weightedListFile = weightedListFileIn;
-            guessHistory = new ArrayList<String>();
-            currentGuess = new ArrayList<Character>(5);
             
             collectWeightData();
             fillLetters();
@@ -90,6 +104,11 @@ public class Game
      * If a letter was correct, but in the incorrect position, marks the incorrect position.
      * If the letter was in the answer, marks the minimum number of occurrences it is aware of.
      * If the letter was not in the word, marks the maximum number of occurrences as 0.
+     * 
+     * TODO: Expects correct input.
+     * Change so it returns a boolean variable.
+     * If the guess is not a word or not the correct amount of letters, return false.
+     * If the guess is of the correct format, score appropiatly and return true.
      */
     public void score(String guessIn)
     {
@@ -147,40 +166,55 @@ public class Game
             inPlace = false;
         }
         
+        if(guess.equals(answer)) completed = true;
+
         guessHistory.add(guess);
     }
 
+    /*
+     * 
+     */
+    public void makeGuess()
+    {  
+        placeKnownLetters();
+        placeUnknownLetters();
+    }
 
-    // public String makeGuess()
-    // {  
-    //     // Places all correct letters with known locations.
-    //     for(Letter l : letters)
-    //     {
-    //         ArrayList<Integer> list = l.getCorrect();
-    //         if(!list.isEmpty())
-    //         {
-    //             for(Integer i : list)
-    //             {
-    //                 currentGuess.set(i, l.getLett());
-    //             }
-    //         }
-    //     }
+    /*
+     * Assigns all correct letters with known placements into their known placement in the current guess.
+     */
+    private void placeKnownLetters()
+    {
+        for(Letter l : letters)
+        {
+            ArrayList<Integer> list = l.getCorrect();
+            if(!list.isEmpty())
+            {
+                for(Integer i : list)
+                {
+                    currentGuess.set(i, l.getLett());
+                }
+            }
+        }
+    }
 
-    //     // find all letters with unknown locations but are in the word.
-    //     ArrayList<Letter> toPlace = new ArrayList<Letter>();
-    //     for(Letter l : letters)
-    //     {
-    //         if(l.getMinOcc() > 0)
-    //         {
-    //             for(int i = 0; i < l.getMinOcc() - l.getCorrect().size(); i++ )
-    //             {
-    //                 toPlace.add(l);
-    //             }
-    //         }
-    //     }
+    
+    private void placeUnknownLetters()
+    {
+         // find all letters with unknown locations but are in the word.
+         ArrayList<Letter> toPlace = new ArrayList<Letter>();
+         for(Letter l : letters)
+         {
+             if(l.getMinOcc() > 0)
+             {
+                 for(int i = 0; i < l.getMinOcc() - l.getCorrect().size(); i++ )
+                 {
+                     toPlace.add(l);
+                 }
+             }
+         }
 
-
-    // }
+    }
 
     private char[] unknownPlacement(char[] guessIn, ArrayList<Letter> toPlaceIn)
     {
@@ -275,6 +309,14 @@ public class Game
     }
 
     /*
+     * Returns whether the game has been completed or not.
+     */
+    public boolean completed()
+    {
+        return completed;
+    }
+    
+    /*
     * output to check data collection was successful.
     */
     public void printData()
@@ -299,6 +341,37 @@ public class Game
         {
             System.out.println(num + " | " + word);
             num++;
+        }
+    }
+
+    /*
+     * Prints current game results.
+     */
+    public void printGame()
+    {
+        System.out.println();
+        for(String s : guessHistory)
+        {
+            System.out.println(s);
+            char[] arr = s.toCharArray();
+            for(int i = 0; i < 5; i++)
+            {
+                char c = Character.toUpperCase(arr[i]);
+                Letter l = letters.get(c - 65);
+                if(l.getCorrect().contains(i))
+                {
+                    System.out.print("Y");
+                }
+                else if(l.getMinOcc() > 0)
+                {
+                    System.out.print("I");
+                }
+                else
+                {
+                    System.out.print("X");
+                }
+            }
+            System.out.println();
         }
     }
 

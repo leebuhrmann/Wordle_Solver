@@ -59,17 +59,18 @@ public class Letter {
             }
         }
 
-        System.out.println(this.getLett());
-        for(int i = 0; i < 5; i++)
-        {
-            System.out.print(" " + weightedPlacements.get(i));
-        }
-        System.out.println();
-        for(int i = 0; i < 5; i ++)
-        {
-            System.out.print(" " + sortedPlacements.get(i));
-        }
-        System.out.println();
+        // TODO: make a proper print function
+        // System.out.println(this.getLett());
+        // for(int i = 0; i < 5; i++)
+        // {
+        //     System.out.print(" " + weightedPlacements.get(i));
+        // }
+        // System.out.println();
+        // for(int i = 0; i < 5; i ++)
+        // {
+        //     System.out.print(" " + sortedPlacements.get(i));
+        // }
+        // System.out.println();
     }
 
     public void incrementMinOcc()
