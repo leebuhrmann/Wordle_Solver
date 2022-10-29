@@ -24,10 +24,7 @@ public class Driver
         /*
          * Initial banner with prompt for user selection.
          */
-        System.out.print("\n*** Worlde Solver ***"
-                        + "\n\nAt anypoint you may enter the following:");
-        printOptions();
-
+        System.out.print("\n*** Worlde Solver ***");
 
         while(playAgain)
         {
@@ -36,7 +33,6 @@ public class Driver
             
             while(!checkInput(selection = in.next()))
             {
-                System.out.println(selection + " was not a valid choice.");
                 printSelectionMenu();
             }
 
@@ -88,7 +84,7 @@ public class Driver
                             + "\nor let the computer play?"
                             + "\n[1] Play Wordle myself"
                             + "\n[2] Let the computer play"
-                            + "\n\nPlease make a selection: ");
+                            + "\n\nPlease type a selection and press [ENTER]: ");
     }
 
     public static void printPlayAgainMenu()
@@ -101,11 +97,12 @@ public class Driver
 
     public static void printOptions()
     {
-        System.out.print( "\n\"HELP\"    Prints this list"
+        System.out.print( "Here are a list of debug options:"
                         + "\n\"ANSWER\"  Prints the answer"
                         + "\n\"GAME\"    Prints current game results"
                         + "\n\"LETTERS\" Prints current letter data"
-                        + "\n\"WEIGHTS\" Prints weight data");
+                        + "\n\"WEIGHTS\" Prints weight data"
+                        + "\n\nPlease type an option and press [ENTER]: ");
     }
 
     /*
@@ -113,27 +110,31 @@ public class Driver
      */
     public static boolean checkInput(String inputIn)
     {
+        String input = inputIn.toUpperCase();
         boolean flag = false;
-        if(inputIn.equals("1") || inputIn.equals("2"))
+        if(input.equals("1") || input.equals("2"))  // valid input
         {
             flag = true;
         }
-        else
+        else if(input.equals("DEBUG"))                     // debug input that doesnt print error, but throws false
         {
-            flag = intrusiveAction(inputIn);
+            Scanner in = new Scanner(System.in);
+            printOptions();
+            intrusiveAction(in.next());
+            in.close();
+        }
+        else                                                          // prints error and throws false
+        {
+            System.out.println(inputIn + " is not a valid seleciton.");
         }
         return flag;
     }
 
-    private static boolean intrusiveAction(String inputIn)
+    private static void intrusiveAction(String inputIn)
     {
-        boolean retFlag = true;
-        String input = inputIn.toUpperCase();
-        switch (input)
+       inputIn = inputIn.toUpperCase();
+        switch (inputIn)
         {
-            case "HELP":
-                printOptions();
-                break;
             case "ANSWER":
                 if(game == null)
                 {
@@ -175,9 +176,7 @@ public class Driver
                 }
                 break;
             default:
-                retFlag = false;
+                System.out.println(inputIn + " is not valid debug input.");
         }
-
-        return retFlag;
     }
 }
