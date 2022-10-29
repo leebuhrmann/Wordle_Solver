@@ -42,7 +42,7 @@ public class Game
      */
     public Game(File dictionaryIn, File weightedListFileIn) 
     {
-        constructorHelper(dictionaryIn, weightedListFileIn, answer);
+        constructorHelper(dictionaryIn, weightedListFileIn);
         Random rand = new Random();
         answer = wordList.get(rand.nextInt(2315));
         answer = answer.toUpperCase();
@@ -54,12 +54,12 @@ public class Game
      */
     public Game(File dictionaryIn, File weightedListFileIn, String answerIn)
     {
-        constructorHelper(dictionaryIn, weightedListFileIn, answerIn);
+        constructorHelper(dictionaryIn, weightedListFileIn);
         answer = answerIn.toUpperCase();
         answerChArr = answer.toCharArray();
     }
 
-    private void constructorHelper(File dictionaryIn, File weightedListFileIn, String answerIn)
+    private void constructorHelper(File dictionaryIn, File weightedListFileIn)
     {
         guessHistory = new ArrayList<Guess>();
         currentGuess = new ArrayList<Character>(5);

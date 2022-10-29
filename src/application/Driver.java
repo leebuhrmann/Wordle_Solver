@@ -8,6 +8,7 @@ import classes.Game;
 public class Driver 
 {
     static Game game;
+    static final Scanner in = new Scanner(System.in);
     public static void main(String[] args)
     {
         /*
@@ -16,7 +17,6 @@ public class Driver
         File dictionaryFile = new File("src/Wordle_Dictionary.txt");
         File weightedListFile = new File("src/Weighted_Wordle_List.txt");
 
-        Scanner in = new Scanner(System.in);
         String selection;
         String guess;
         boolean playAgain = true;
@@ -30,8 +30,8 @@ public class Driver
         {
             System.out.println();
             printSelectionMenu();
-            
-            while(!checkInput(selection = in.next()))
+
+            while(!checkInput(selection = in.nextLine()))
             {
                 printSelectionMenu();
             }
@@ -42,12 +42,12 @@ public class Driver
                 while(!game.completed())
                 {
                     System.out.println("\nGuess a five letter word: ");
-                    guess = in.next();  // insert intrusive action
+                    guess = in.nextLine();  // insert intrusive action
                     while(!game.playerGuess(guess))
                     {
                         System.out.println("\n" + guess + " is not a five letter word."
                                            + "\nGuess a five letter word: ");
-                        guess = in.next();
+                        guess = in.nextLine();
                     }
                     System.out.println();
                     game.printGame();
@@ -59,7 +59,7 @@ public class Driver
             }
         
             printPlayAgainMenu();
-            while(!checkInput(selection = in.next()))
+            while(!checkInput(selection = in.nextLine()))
             {
                 System.out.println(selection + " was not a valid choice.");
                 printSelectionMenu();
@@ -118,10 +118,8 @@ public class Driver
         }
         else if(input.equals("DEBUG"))                     // debug input that doesnt print error, but throws false
         {
-            Scanner in = new Scanner(System.in);
             printOptions();
-            intrusiveAction(in.next());
-            in.close();
+            intrusiveAction(in.nextLine());
         }
         else                                                          // prints error and throws false
         {
