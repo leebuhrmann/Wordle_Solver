@@ -14,7 +14,7 @@ public class Letter {
 
     public Letter(char lettIn, int[] weightsIn)
     {
-        lett = lettIn;
+        lett = Character.toUpperCase(lettIn);
         minOcc = 0;
         maxOcc = 5;
         correctPlacement = new ArrayList<Integer>();
@@ -58,19 +58,6 @@ public class Letter {
                 }
             }
         }
-
-        // TODO: make a proper print function
-        // System.out.println(this.getLett());
-        // for(int i = 0; i < 5; i++)
-        // {
-        //     System.out.print(" " + weightedPlacements.get(i));
-        // }
-        // System.out.println();
-        // for(int i = 0; i < 5; i ++)
-        // {
-        //     System.out.print(" " + sortedPlacements.get(i));
-        // }
-        // System.out.println();
     }
 
     public void incrementMinOcc()
@@ -124,5 +111,43 @@ public class Letter {
     public ArrayList<Integer> getSorted()
     {
         return sortedPlacements;
+    }
+
+    public void printLetterData()
+    {
+        System.out.printf("\n\n%13s : %c"
+                        , "Letter", this.getLett());
+        System.out.printf("\n%13s : ", "Order");
+        for(int i = 0; i < 5; i++)
+        {
+            System.out.printf("%-4d", sortedPlacements.get(i));
+        }
+        System.out.printf("\n%13s : ", "Weight");
+        for(int i = 0; i < 5; i ++)
+        {
+            System.out.printf("%-4d", weightedPlacements.get(i));
+        }
+        System.out.printf("\n%13s :", "Correct");
+        if(correctPlacement.isEmpty())
+        {
+            System.out.print(" Empty");
+        }
+        {
+            for(int i = 0; i < correctPlacement.size(); i ++)
+            {
+                System.out.print(" " + correctPlacement.get(i));
+            }
+        }
+        System.out.printf("\n%13s :", "Not Attempted");
+        if(notAttemptedPlacements.isEmpty())
+        {
+            System.out.print(" Empty");
+        }
+        for(int i = 0; i < notAttemptedPlacements.size(); i ++)
+        {
+            System.out.print(" " + notAttemptedPlacements.get(i));
+        }
+        System.out.printf("\n%13s : %d", "Minimum", minOcc);
+        System.out.printf("\n%13s : %d", "Maximum", maxOcc);
     }
 }
