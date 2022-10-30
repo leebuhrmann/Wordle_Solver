@@ -25,6 +25,10 @@ public class Driver
          */
         System.out.print("\n*** Worlde Solver ***");
 
+        Game test = new Game(dictionaryFile, weightedListFile, "Zazzy");
+        test.printAnswerData();
+        System.exit(0);
+
         while(playAgain)
         {
             System.out.println();
