@@ -1,15 +1,11 @@
 package tests;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.ArrayList;
-
-import org.junit.Test;
 
 import classes.Game;
-import classes.Letter;
 
 //TODO: Check https://stackoverflow.com/questions/74201115/filenotfoundexception-during-junit-tests-but-not-when-running-the-actual-app
 public class GameTests

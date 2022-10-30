@@ -17,8 +17,7 @@ public class Driver
         File dictionaryFile = new File("src/Wordle_Dictionary.txt");
         File weightedListFile = new File("src/Weighted_Wordle_List.txt");
 
-        String selection;
-        String guess;
+        String input;
         boolean playAgain = true;
 
         /*
@@ -31,24 +30,22 @@ public class Driver
             System.out.println();
             printSelectionMenu();
 
-            while(!checkInput(selection = in.nextLine()))
+            while(!checkMenuSelection(input = in.nextLine()))
             {
                 printSelectionMenu();
             }
 
-            if(selection.equals("1"))
+            if(input.equals("1"))
             {
                 game = new Game(dictionaryFile, weightedListFile, "Stall");
                 while(!game.completed())
                 {
                     System.out.println("\nGuess a five letter word: ");
-                    guess = in.nextLine();  // insert intrusive action
-                    while(!game.playerGuess(guess))
+                    while(!checkWord(input = in.nextLine()))
                     {
-                        System.out.println("\n" + guess + " is not a five letter word."
-                                           + "\nGuess a five letter word: ");
-                        guess = in.nextLine();
+                        System.out.println("\nGuess a five letter word: ");
                     }
+                    
                     System.out.println();
                     game.printGame();
                 }
@@ -59,12 +56,11 @@ public class Driver
             }
         
             printPlayAgainMenu();
-            while(!checkInput(selection = in.nextLine()))
+            while(!checkMenuSelection(input = in.nextLine()))
             {
-                System.out.println(selection + " was not a valid choice.");
-                printSelectionMenu();
+                printPlayAgainMenu();
             }
-            if(selection.equals("2"))
+            if(input.equals("2"))
             {
                 playAgain = false;
             }
@@ -95,7 +91,7 @@ public class Driver
                             + "\n\nPlease make a selection: ");
     }
 
-    public static void printOptions()
+    public static void printDebugMenu()
     {
         System.out.print( "Here are a list of debug options:"
                         + "\n\"ANSWER\"  Prints the answer"
@@ -105,32 +101,58 @@ public class Driver
                         + "\n\nPlease type an option and press [ENTER]: ");
     }
 
+    public static boolean checkWord(String inputIn)
+    {
+        inputIn = inputIn.toUpperCase();
+        boolean retFlag = false;
+
+        if(inputIn.equals("DEBUGGER"))
+        {
+            printDebugMenu();
+            debugger(in.nextLine());
+        }
+        else if(!game.playerGuess(inputIn)) 
+        {
+            System.out.println("\n" + inputIn + " is not a five letter word."
+                                 + "\nGuess a five letter word: ");
+        }
+        else
+        {
+            retFlag = true;
+        }
+
+        return retFlag;
+    }
+
     /*
      * Checks input for user selection.
      */
-    public static boolean checkInput(String inputIn)
+    public static boolean checkMenuSelection(String inputIn)
     {
-        String input = inputIn.toUpperCase();
+        inputIn = inputIn.toUpperCase();
         boolean flag = false;
-        if(input.equals("1") || input.equals("2"))  // valid input
+        
+        if(inputIn.equals("DEBUGGER"))    // intrusive debug action
+        {
+            printDebugMenu();
+            debugger(in.nextLine());
+        }
+        else if(inputIn.equals("1") || inputIn.equals("2"))  // valid input
         {
             flag = true;
         }
-        else if(input.equals("DEBUG"))                     // debug input that doesnt print error, but throws false
-        {
-            printOptions();
-            intrusiveAction(in.nextLine());
-        }
-        else                                                          // prints error and throws false
+        else                                                      // prints error and throws false
         {
             System.out.println(inputIn + " is not a valid seleciton.");
         }
         return flag;
     }
 
-    private static void intrusiveAction(String inputIn)
+    public static boolean debugger(String inputIn)
     {
-       inputIn = inputIn.toUpperCase();
+        inputIn = inputIn.toUpperCase();
+        boolean retFlag = true;
+
         switch (inputIn)
         {
             case "ANSWER":
@@ -175,6 +197,9 @@ public class Driver
                 break;
             default:
                 System.out.println(inputIn + " is not valid debug input.");
+                retFlag = false;
         }
+
+        return retFlag;
     }
 }

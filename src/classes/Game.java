@@ -123,6 +123,8 @@ public class Game
         }
     }
 
+    
+    
     // TODO: seperate score and letter data algorithm.
     /*
      * Scores the guess and returns the score of that guess. Also marks current game Letter data.
