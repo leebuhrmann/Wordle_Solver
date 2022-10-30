@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Scanner;
 
 import classes.Game;
+import classes.Word;
 
 public class Driver 
 {
@@ -25,9 +26,14 @@ public class Driver
          */
         System.out.print("\n*** Worlde Solver ***");
 
-        Game test = new Game(dictionaryFile, weightedListFile, "Zazzy");
-        test.printAnswerData();
-        System.exit(0);
+        // TODO: testing stuff
+        // Game test = new Game(dictionaryFile, weightedListFile, "allay");
+        // test.printAnswerData();
+        // Word guess = new Word("amass");
+        // test.updateLetters(guess);
+        // test.printLetters();
+        // System.out.println("\n777 " + test.score(guess));
+        // System.exit(0);
 
         while(playAgain)
         {

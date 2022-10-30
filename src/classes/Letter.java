@@ -60,9 +60,9 @@ public class Letter {
         }
     }
 
-    public void incrementMinOcc()
+    public void setMinOcc(int minOccIn)
     {
-        minOcc++;
+        minOcc = minOccIn;
     }
 
     public int getMinOcc()
@@ -113,6 +113,9 @@ public class Letter {
         return sortedPlacements;
     }
 
+    /*
+     * Prints the data of this Letter
+     */
     public void printLetterData()
     {
         System.out.printf("\n\n%13s : %c"

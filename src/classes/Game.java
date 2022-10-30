@@ -99,6 +99,7 @@ public class Game
         {
             Word guess = new Word(guessIn);
             guess.setScore(score(guess));
+            updateLetters(guess);
             guessHistory.add(guess);
             retFlag = true;
         }
@@ -120,94 +121,16 @@ public class Game
         }
     }
 
-    // private String guessLetterStats(String guessIn)
-    // {
-    //     char[] guessChArr = guessIn.toCharArray();
-    //     String score = "";
-    //     String concat = "";
-
-    //     int occurrences = 0;
-    //     boolean occured = false;
-    //     boolean inPlace = false;
-
-    //     for(int i = 0; i < 5; i++)      //guessChArr
-    //     {  
-    //         Letter letter = letters.get(guessChArr[i] - 65);
-
-    //         for(int j = 0; j < 5; j++)  //answerChArr
-    //         {
-    //             if(guessChArr[i] == answerChArr[j])
-    //             {
-    //                 if(i == j)
-    //                 {
-    //                     inPlace = true;
-    //                 }
-                    
-    //                 occured = true;
-    //                 occurrences++;
-    //             }
-    //         }
-
-    //         letter.attempted(i);
-
-    //         if(occured)
-    //         {
-    //             if(occurrences > letters.get(guessChArr[i] - 65).getMinOcc())    // if the letter has occured more then the amount it is currently aware of
-    //             {
-    //                 letter.incrementMinOcc();
-    //                 concat = "I";
-    //             }
-    //             else    // if the letter has occured, but not more then the letter is aware of
-    //             {
-    //                 letter.setMaxOcc(letter.getMinOcc());
-    //                 concat = "X";
-    //             }
-
-    //             if(inPlace)    // if the letter in guess occured in that exact location
-    //             {
-    //                 letter.addCorrect(i);
-    //                 concat = "Y";
-    //             }
-                
-    //         } 
-    //         else       // if the letter in guess did not occure in the answer at all
-    //         {
-    //             letter.setMaxOcc(0);
-    //             concat = "X";
-    //         }
-
-    //         occurrences = 0;
-    //         occured = false;
-    //         inPlace = false;
-    //         score = score.concat(concat);
-    //     }
-
-    //     return score;
-    // }
-    
-    // TODO: seperate score and letter data algorithm.
     /*
-     * Scores the guess and returns the score of that guess. Also marks current game Letter data.
-     * 
-     * If a letter was correct, and in the correct position, marks the correct position.
-     * If a letter was correct, but in the incorrect position, marks the incorrect position.
-     * If the letter was in the answer, marks the minimum number of occurrences it is aware of.
-     * If it has found the maximum number of occurrences of a letter, marks that maximum.
-     * If the letter was not in the word, marks the maximum number of occurrences as 0.
-     * 
-     * Returns a String that is the score of the passed guess.
+     * Updates known letter data after a guess is scored.
      */
-    private String score(Word guessIn)
+    public void updateLetters(Word guessIn)
     {
         char[] guessChArr = guessIn.getWordArr();
         char[] answerChArr = answer.getWordArr();
-        String score = "";
-        String concat = "";
-
-        int occurrences = 0;
-        boolean occured = false;
         boolean inPlace = false;
 
+        //Checks to see if a letter is in the correct position and marks if it has been attempted.
         for(int i = 0; i < 5; i++)      //guessChArr
         {  
             Letter letter = letters.get(guessChArr[i] - 65);
@@ -220,47 +143,89 @@ public class Game
                     {
                         inPlace = true;
                     }
-                    
-                    occured = true;
-                    occurrences++;
                 }
             }
 
             letter.attempted(i);
-
-            if(occured)
+            if(inPlace && !letter.getCorrect().contains(i))
             {
-                if(occurrences > letters.get(guessChArr[i] - 65).getMinOcc())    // if the letter has occured more then the amount it is currently aware of
-                {
-                    letter.incrementMinOcc();
-                    concat = "I";
-                }
-                else    // if the letter has occured, but not more then the letter is aware of
-                {
-                    letter.setMaxOcc(letter.getMinOcc());
-                    concat = "X";
-                }
-
-                if(inPlace)    // if the letter in guess occured in that exact location
-                {
-                    letter.addCorrect(i);
-                    concat = "Y";
-                }
-                
-            } 
-            else       // if the letter in guess did not occure in the answer at all
-            {
-                letter.setMaxOcc(0);
-                concat = "X";
+                letter.addCorrect(i);
             }
 
-            occurrences = 0;
-            occured = false;
             inPlace = false;
-            score = score.concat(concat);
         }
 
-        return score;
+       /*
+        * Sets minimum and maximum occurences known for each letter
+        */
+        int[] guessOcc = guessIn.getLetterOccurrences();
+        int[] answerOcc = answer.getLetterOccurrences();
+        // TODO: magic number
+        for(int i = 0; i < 26; i++)
+        {
+            Letter letter = letters.get(i);
+            if(guessOcc[i] <= answerOcc[i])
+            {
+                letter.setMinOcc(guessOcc[i]);
+            }
+            else
+            {
+                letter.setMinOcc(answerOcc[i]);
+                letter.setMaxOcc(answerOcc[i]);
+            }
+        }
+    }
+    
+    /*
+     * Returns a score of a guess against the answer.
+     */
+    public String score(Word guessIn)
+    {
+        char[] guessChArr = guessIn.getWordArr();
+        char[] answerChArr = answer.getWordArr();
+        int[] lettCounter = new int[26];
+        char[] score = new char[5];
+
+        // Scores all correct letters in correct positions
+        for(int i = 0; i < 5; i++)      //guessChArr
+        {  
+            for(int j = 0; j < 5; j++)  //answerChArr
+            {
+                char gc = guessChArr[i];
+                char ac = answerChArr[j];
+                if(gc == ac && i == j)    // letter in a position of guess found in the same position as answer
+                {
+                    score[i] = 'Y';
+                    lettCounter[guessChArr[i] - 65]++;
+                }
+            }
+        }
+
+        // scores remaining letters
+        for(int i = 0; i < 5; i++)      //guessChArr
+        {  
+            if(score[i] != 'Y') // skip if already scored as correct
+            {
+                for(int j = 0; j < 5; j++)  //answerChArr
+                {
+                    char gc = guessChArr[i];
+                    char ac = answerChArr[j];
+                    if(gc == ac
+                        && lettCounter[gc - 65] < answer.getLetterOccurrences()[gc - 65])
+                    {
+                        score[i] = 'I';
+                        lettCounter[gc - 65]++;
+                        break;
+                    }
+                    else
+                    {
+                        score[i] = 'X';
+                    }
+                }
+            }
+        }
+
+        return new String(score);
     }
 
     /*
