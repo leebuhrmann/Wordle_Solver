@@ -3,6 +3,8 @@ import java.util.ArrayList;
 
 public class Letter {
 
+    private static final int WORD_SIZE = 5;
+
     private int minOcc;
     private int maxOcc;         //if 0, means it is not a correct letter
     private char lett;
@@ -16,21 +18,21 @@ public class Letter {
     {
         lett = Character.toUpperCase(lettIn);
         minOcc = 0;
-        maxOcc = 5;
+        maxOcc = WORD_SIZE;
         correctPlacement = new ArrayList<Integer>();
         notAttemptedPlacements = new ArrayList<Integer>();
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < WORD_SIZE; i++)
         {
             notAttemptedPlacements.add(i);
         }
 
         weightedPlacements = new ArrayList<Integer>();
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < WORD_SIZE; i++)
         {
             weightedPlacements.add(weightsIn[i]);
         }
         sortedPlacements = new ArrayList<Integer>();
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < WORD_SIZE; i++)
         {
             sortedPlacements.add(i);
         }
@@ -121,12 +123,12 @@ public class Letter {
         System.out.printf("\n\n%13s : %c"
                         , "Letter", this.getLett());
         System.out.printf("\n%13s : ", "Order");
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < WORD_SIZE; i++)
         {
             System.out.printf("%-4d", sortedPlacements.get(i));
         }
         System.out.printf("\n%13s : ", "Weight");
-        for(int i = 0; i < 5; i ++)
+        for(int i = 0; i < WORD_SIZE; i ++)
         {
             System.out.printf("%-4d", weightedPlacements.get(i));
         }

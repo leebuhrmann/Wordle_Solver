@@ -4,7 +4,19 @@ import java.io.File;
 import java.util.Scanner;
 
 import classes.Game;
-import classes.Word;
+
+/*
+ * IDEAS:
+ * 
+ * Create GUI for game.
+ * Have game on webbrowser.
+ * Allow player to chose number of attempts.
+ * Allow games with different dictionaries, possibly different word sizes and alphabets.
+ * Allow Wordle_Letter_Weigher to pass files directly this app, or have this app call that app.7
+ */
+
+// TODO: Rewrite all method comments for consistency and understandabilty.
+// TODO: Review comments of working code.
 
 public class Driver 
 {
@@ -12,9 +24,6 @@ public class Driver
     static final Scanner in = new Scanner(System.in);
     public static void main(String[] args)
     {
-        /*
-         * Later I may make it possible for the Wordle_Letter_Weigher app to pass fiels directly to this app
-         */
         File dictionaryFile = new File("src/Wordle_Dictionary.txt");
         File weightedListFile = new File("src/Weighted_Wordle_List.txt");
 
@@ -25,15 +34,6 @@ public class Driver
          * Initial banner with prompt for user selection.
          */
         System.out.print("\n*** Worlde Solver ***");
-
-        // TODO: testing stuff
-        // Game test = new Game(dictionaryFile, weightedListFile, "allay");
-        // test.printAnswerData();
-        // Word guess = new Word("amass");
-        // test.updateLetters(guess);
-        // test.printLetters();
-        // System.out.println("\n777 " + test.score(guess));
-        // System.exit(0);
 
         while(playAgain)
         {
@@ -47,7 +47,7 @@ public class Driver
 
             if(input.equals("1"))
             {
-                game = new Game(dictionaryFile, weightedListFile, "Stall");
+                game = new Game(dictionaryFile, weightedListFile);
                 while(!game.completed())
                 {
                     System.out.println("\nGuess a five letter word: ");
@@ -63,6 +63,7 @@ public class Driver
             else
             {
                 // computer plays!
+                System.exit(0);
             }
         
             printPlayAgainMenu();
@@ -81,8 +82,8 @@ public class Driver
         System.exit(0);
     }
 
-    /*
-     * Prints menu for user selection.
+    /**
+     * Prints menu asking if user would like to play or let the computer play.
      */
     public static void printSelectionMenu()
     {
@@ -93,6 +94,9 @@ public class Driver
                             + "\n\nPlease type a selection and press [ENTER]: ");
     }
 
+    /**
+     * Prints menu asking if player would like to play again.
+     */
     public static void printPlayAgainMenu()
     {
         System.out.print("\nWould you like to play again?"
@@ -101,6 +105,9 @@ public class Driver
                             + "\n\nPlease make a selection: ");
     }
 
+    /**
+     * Prints menu for debug options.
+     */
     public static void printDebugMenu()
     {
         System.out.print( "Here are a list of debug options:"
@@ -111,6 +118,11 @@ public class Driver
                         + "\n\nPlease type an option and press [ENTER]: ");
     }
 
+    /**
+     * TODO: I dont like how the method that is supposed to check input also performs the game step.
+     * Checks that user input is a five letter word. If input is "DEBUGGER"
+     * it interupts the current action with the debug window
+     */
     public static boolean checkWord(String inputIn)
     {
         inputIn = inputIn.toUpperCase();
@@ -134,8 +146,8 @@ public class Driver
         return retFlag;
     }
 
-    /*
-     * Checks input for user selection.
+    /**
+     * Checks input for 
      */
     public static boolean checkMenuSelection(String inputIn)
     {
@@ -158,6 +170,12 @@ public class Driver
         return flag;
     }
 
+    /**
+     * Performs one of many debug options.
+     * 
+     * Returns true if input was recognized.
+     * Returns false if input was not recognized.
+     */
     public static boolean debugger(String inputIn)
     {
         inputIn = inputIn.toUpperCase();
