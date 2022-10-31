@@ -8,89 +8,148 @@ import java.util.Scanner;
 public class Game
 {
     /*
-    * File data.
-    */
+     * Game parameters.
+     */
+    private static final int NUM_ATTEMPTS = 6;
+    private static final int WORD_LEGNTH = 5;
+    /*
+     * Used to shift a character on the ANSII table into a int representing its number in the alphabet
+     * and vice a versa.
+     */
+    private static final int CHAR_SHIFT = 65;
+    private static final int ALPHABET_SIZE = 26;
+    /*
+     * This value is the number of words at the beggining of the dictionary that can be answers.
+     * The rest of the words can be accepted, but are not answers.
+     */
+    private static final int CORRECT_WORD_LIST_SIZE = 2314;
+
+    /*
+     * Files data.
+     */
     private File dictionary;
     private File weightedListFile;
-    private int[] p1Weights = new int[26];
-    private int[] p2Weights = new int[26];
-    private int[] p3Weights = new int[26];
-    private int[] p4Weights = new int[26];
-    private int[] p5Weights = new int[26];
-    private ArrayList<String> wordList = new ArrayList<String>();
+    private ArrayList<String> wordList;
+    private int[] p1Weights;
+    private int[] p2Weights;
+    private int[] p3Weights;
+    private int[] p4Weights;
+    private int[] p5Weights; 
 
     /*
      * Game and Score fields.
      */
-    private String answer;
-    private char[] answerChArr;
-    private String guess;
-    private char[] guessChArr;
-    private ArrayList<Letter> letters = new ArrayList<Letter>();
+    private ArrayList<Letter> letters;
+    private boolean completed;
+    private Word answer;
+    private ArrayList<Word> guessHistory;
+    
 
-    /*
-     * Creates a 
+    /**
+     * Creates a game with a random answer.
      */
     public Game(File dictionaryIn, File weightedListFileIn) 
     {
         constructorHelper(dictionaryIn, weightedListFileIn);
-
         Random rand = new Random();
-        answer = wordList.get(rand.nextInt(2315));
-        answer = answer.toUpperCase();
-        answerChArr = answer.toCharArray();
-        guess = wordList.get(rand.nextInt(12971));
-        guess = guess.toUpperCase();
-        guessChArr = guess.toCharArray();
+        String answerStr = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE + 1));
+        answer = new Word(answerStr);
     }
 
-    public Game(File dictionaryIn, File weightedListFileIn, String guessIn, String answerIn)
+    /*
+     * Creates a game with a specified answer.
+     */
+    public Game(File dictionaryIn, File weightedListFileIn, String answerIn)
     {
         constructorHelper(dictionaryIn, weightedListFileIn);
-        
-        answer = answerIn.toUpperCase();
-        answerChArr = answer.toCharArray();
-        guess = guessIn.toUpperCase();
-        guessChArr = guess.toCharArray();
+        answer = new Word(answerIn);
     }
 
+    /*
+     * Assists the constructors.
+     */
     private void constructorHelper(File dictionaryIn, File weightedListFileIn)
     {
+        guessHistory = new ArrayList<Word>();
+        p1Weights = new int[ALPHABET_SIZE];
+        p2Weights = new int[ALPHABET_SIZE];
+        p3Weights = new int[ALPHABET_SIZE];
+        p4Weights = new int[ALPHABET_SIZE];
+        p5Weights = new int[ALPHABET_SIZE];
+        wordList = new ArrayList<String>();
+        letters = new ArrayList<Letter>();
+        completed = false;
+
         try
         {
             dictionary = dictionaryIn;
             weightedListFile = weightedListFileIn;
-    
-            fillLetters();
+            
             collectWeightData();
-            parseDictionary();
+            fillLetters();
+            collectDictionaryWords();
         }
         catch(FileNotFoundException fnfe)
         {
             System.out.println("File was not found!");
+            fnfe.printStackTrace();
+            System.exit(1);
         }
     }
 
+    /*
+     * Checks to see if the passed guess is valid. If the passed guess is valid it will
+     * score the guess, update the game letter data, and check the completion state.
+     * 
+     * Returns True, if the guess is in the dictionary and has scored the guess.
+     * Returns False, if the guess is not in the dictionary and has not scored the guess.
+     */
+    public boolean playerGuess(String guessIn)
+    {
+        guessIn = guessIn.toUpperCase();
+        boolean retFlag = false;
+        if(guessIn.length() == WORD_LEGNTH
+            && wordList.contains(guessIn))
+        {
+            Word guess = new Word(guessIn);
+            guess.setScore(score(guess));
+            updateLetters(guess);
+            guessHistory.add(guess);
+            retFlag = true;
+        }
+
+        completionState();
+        return retFlag;
+    }
 
     /*
-     * Scores the guess.
-     * 
-     * If a letter was correct, and in the correct position, marks the correct position.
-     * If a letter was correct, but in the incorrect position, marks the incorrect position.
-     * If the letter was in the answer, marks the minimum number of occurrences it is aware of.
-     * If the letter was not in the word, marks the maximum number of occurrences as 0.
+     * Checks to see if the player has run out of attempts or guessed the correct word.
      */
-    public void score()
+    private void completionState()
     {
-        int occurrences = 0;
-        boolean occured = false;
+        String guess = guessHistory.get(guessHistory.size() - 1).getWord(); // Gets the string of the last attempted guess
+        if(guess.equals(answer.getWord())
+            || guessHistory.size() >= NUM_ATTEMPTS)
+        {
+            completed = true;
+        }
+    }
+
+    /*
+     * Updates known letter data after a guess is scored.
+     */
+    public void updateLetters(Word guessIn)
+    {
+        char[] guessChArr = guessIn.getWordArr();
+        char[] answerChArr = answer.getWordArr();
         boolean inPlace = false;
 
-        for(int i = 0; i < 5; i++)      //guessChArr
+        //Checks to see if a letter is in the correct position and marks if it has been attempted.
+        for(int i = 0; i < WORD_LEGNTH; i++)      //guessChArr
         {  
-            Letter temp = letters.get(guessChArr[i] - 65);
+            Letter letter = letters.get(guessChArr[i] - CHAR_SHIFT);
 
-            for(int j = 0; j < 5; j++)  //answerChArr
+            for(int j = 0; j < WORD_LEGNTH; j++)  //answerChArr
             {
                 if(guessChArr[i] == answerChArr[j])
                 {
@@ -98,51 +157,105 @@ public class Game
                     {
                         inPlace = true;
                     }
-                    
-                    occured = true;
-                    occurrences++;
                 }
             }
 
-            if(occured)
+            letter.attempted(i);
+            if(inPlace && !letter.getCorrect().contains(i))
             {
-                if(occurrences > letters.get(guessChArr[i] - 65).getMinOcc())
-                {
-                    temp.incrementMinOcc();
-                }
-                else
-                {
-                    temp.setMaxOcc(temp.getMinOcc());
-                }
-
-                if(inPlace)
-                {
-                    temp.addCorrect(i);
-                }
-                else
-                {
-                    temp.addIncorrect(i);
-                }
-            } 
-            else
-            {
-                temp.setMaxOcc(0);
+                letter.addCorrect(i);
             }
 
-            occurrences = 0;
-            occured = false;
             inPlace = false;
         }
-        
+
+       /*
+        * Sets minimum and maximum occurences known for each letter
+        */
+        int[] guessOcc = guessIn.getLetterOccurrences();
+        int[] answerOcc = answer.getLetterOccurrences();
+        for(int i = 0; i < ALPHABET_SIZE; i++)
+        {
+            Letter letter = letters.get(i);
+            if(guessOcc[i] <= answerOcc[i])
+            {
+                letter.setMinOcc(guessOcc[i]);
+            }
+            else
+            {
+                letter.setMinOcc(answerOcc[i]);
+                letter.setMaxOcc(answerOcc[i]);
+            }
+        }
+    }
+    
+    /*
+     * Returns a score of a guess against the answer.
+     */
+    public String score(Word guessIn)
+    {
+        char[] guessChArr = guessIn.getWordArr();
+        char[] answerChArr = answer.getWordArr();
+        int[] lettCounter = new int[ALPHABET_SIZE];
+        char[] score = new char[WORD_LEGNTH];
+
+        // Scores all correct letters in correct positions
+        for(int i = 0; i < WORD_LEGNTH; i++)      //guessChArr
+        {  
+            for(int j = 0; j < WORD_LEGNTH; j++)  //answerChArr
+            {
+                char gc = guessChArr[i];
+                char ac = answerChArr[j];
+                if(gc == ac && i == j)    // letter in a position of guess found in the same position as answer
+                {
+                    score[i] = 'Y';
+                    lettCounter[guessChArr[i] - CHAR_SHIFT]++;
+                }
+            }
+        }
+
+        // scores remaining letters
+        for(int i = 0; i < WORD_LEGNTH; i++)      //guessChArr
+        {  
+            if(score[i] != 'Y') // skip if already scored as correct
+            {
+                for(int j = 0; j < WORD_LEGNTH; j++)  //answerChArr
+                {
+                    char gc = guessChArr[i];
+                    char ac = answerChArr[j];
+                    if(gc == ac
+                        && lettCounter[gc - CHAR_SHIFT] < answer.getLetterOccurrences()[gc - CHAR_SHIFT])
+                    {
+                        score[i] = 'I';
+                        lettCounter[gc - CHAR_SHIFT]++;
+                        break;
+                    }
+                    else
+                    {
+                        score[i] = 'X';
+                    }
+                }
+            }
+        }
+
+        return new String(score);
     }
 
     /*
-     * Retrieves a specified Letter.
+     * Reurns a Letter object of this game specified by its character.
      */
     public Letter getLetter(char lettIn)
     {
         lettIn = Character.toUpperCase(lettIn);
-        return letters.get(lettIn - 65);
+        return letters.get(lettIn - CHAR_SHIFT);
+    }
+
+    /*
+     * Returns the answer as a String.
+     */
+    public String getAnswer()
+    {
+        return answer.getWord();
     }
 
     /*
@@ -150,21 +263,28 @@ public class Game
     */
     private void fillLetters()
     {
-        for(int i = 0; i < 26; i++)
+        for(int i = 0; i < ALPHABET_SIZE; i++)
         {
-            char cOut = (char)(i + 65);
-            letters.add(new Letter(cOut));
+            int[] weightsOut = new int[WORD_LEGNTH];
+            weightsOut[0] = p1Weights[i];
+            weightsOut[1] = p2Weights[i];
+            weightsOut[2] = p3Weights[i];
+            weightsOut[3] = p4Weights[i];
+            weightsOut[4] = p5Weights[i];
+
+            char cOut = (char)(i + CHAR_SHIFT);
+            letters.add(new Letter(cOut, weightsOut));
         }
     }
 
     /*
-    * Collect data from Weighted_Wordle_List.txt
+    * Collect data from file.
     */
     private void collectWeightData() throws FileNotFoundException
     {
         int i = 0;
         Scanner in = new Scanner(weightedListFile);
-        while(in.hasNextLine() && i < 26)
+        while(in.hasNextLine() && i < ALPHABET_SIZE)
         {
             String record = in.nextLine();
             Scanner lineParser = new Scanner(record);
@@ -184,9 +304,9 @@ public class Game
     }
 
     /*
-    * Collect every word that can be accepted by Wordle.
+    * Collect every word from dictionary and stores it in wordList.
     */
-    private void parseDictionary() throws FileNotFoundException
+    private void collectDictionaryWords() throws FileNotFoundException
     {
         Scanner in = new Scanner(dictionary);
         in.nextLine(); //skip first line
@@ -208,22 +328,30 @@ public class Game
     }
 
     /*
-    * output to check data collection was successful.
+     * Returns whether the game has been completed or not.
+     */
+    public boolean completed()
+    {
+        return completed;
+    }
+    
+    /*
+    * Prints positional weight data.
     */
-    public void printData()
+    public void printWeightData()
     {
         System.out.print("\nPOS|  1  |  2  |  3  |  4  |  5  |\n");
-        for(int i = 0; i < 26; i++)
+        for(int i = 0; i < ALPHABET_SIZE; i++)
         {
             System.out.printf(" %c | %3d | %3d | %3d | %3d | %3d |\n"
-                                , (i + 65), p1Weights[i], p2Weights[i]
+                                , (i + CHAR_SHIFT), p1Weights[i], p2Weights[i]
                                 , p3Weights[i], p4Weights[i]
                                 , p5Weights[i]);
         }
     }
 
     /*
-    * Output to check if word collection was successful.
+    * Prints everyword in the wordlist.
     */
     public void printDictionary()
     {
@@ -236,28 +364,38 @@ public class Game
     }
 
     /*
-     * Prints the current score of the game.
+     * Prints current game results.
      */
-    public void printScore()
+    public void printGame()
     {
-        System.out.println("\nGuess: " + guess + "\nAnswer: " + answer);
+        for(Word g : guessHistory)
+        {
+            System.out.println(g.getWord());
+            System.out.println(g.getScore());
+        }
+    }
 
-        System.out.println("\n|let|min|max| cp... | icp... | ");
+    /*
+     * Prints all Letters and their data.
+     */
+    public void printLetters()
+    {
         for(Letter l : letters)
         {
-            System.out.printf("| %c | %d | %d | ", l.getLett(), l.getMinOcc(), l.getMaxOcc());
-            for(Integer p : l.getCorrect())
-            {
-                System.out.print(p + " ");
-            }
-            System.out.print("| ");
-            for(Integer p : l.getIncorrect())
-            {
-                System.out.print(p + " ");
-            }
-            System.out.println("|");
+            l.printLetterData();
         }
+    }
 
-        System.out.println("\n");
+    /*
+     * Prints answer data.
+     */
+    public void printAnswerData()
+    {
+        System.out.println("\nAnswer: " + answer.getWord());
+        int[] occurrences = answer.getLetterOccurrences();
+        for(int i = 0; i < occurrences.length; i++)
+        {
+            System.out.printf("%c : %d\n", (i + CHAR_SHIFT), occurrences[i]);
+        }
     }
 }
