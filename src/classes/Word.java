@@ -11,7 +11,6 @@ public class Word {
      */
     private int[] letterOccNum;
 
-    // TODO: may not need
     public Word(String wordIn, String scoreIn)
     {
         score = scoreIn;

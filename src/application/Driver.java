@@ -3,6 +3,8 @@ package application;
 import java.io.File;
 import java.util.Scanner;
 
+import javax.lang.model.util.ElementScanner14;
+
 import classes.Game;
 
 /*
@@ -28,52 +30,87 @@ public class Driver
         File weightedListFile = new File("src/Weighted_Wordle_List.txt");
 
         String input;
-        boolean playAgain = true;
 
         /*
          * Initial banner with prompt for user selection.
          */
-        System.out.print("\n*** Worlde Solver ***");
+        System.out.print("\n*** Worlde Solver ***\n");
 
-        while(playAgain)
+        while(true)  
         {
-            System.out.println();
-            printSelectionMenu();
-
-            while(!checkMenuSelection(input = in.nextLine()))
+            while(true) // ensures proper input
             {
                 printSelectionMenu();
-            }
+                input = in.nextLine();
+                if(checkForDebugger(input))
+                {
+                    printDebugMenu();
+                    debugger(in.nextLine());
+                    System.out.println();
+                }
+                else if(!checkMenuSelection(input))
+                {
+                    System.out.println(input + " was not a valid choice.");
+                }
+                else
+                {
+                    break;
+                }
+            }   
 
-            if(input.equals("1"))
+            if(input.equals("1"))   // starts a game played by a person (not played by a bot)
             {
                 game = new Game(dictionaryFile, weightedListFile);
                 while(!game.completed())
                 {
-                    System.out.println("\nGuess a five letter word: ");
-                    while(!checkWord(input = in.nextLine()))
+                    System.out.print("\nGuess a five letter word: ");
+                    input = in.nextLine();
+                    if(checkForDebugger(input)) // checks for intrusive debugging action
                     {
-                        System.out.println("\nGuess a five letter word: ");
+                        printDebugMenu();
+                        debugger(in.nextLine());
+                        System.out.println();
                     }
-                    
-                    System.out.println();
-                    game.printGame();
+                    else if(game.gameStep(input)) // checks input and possibly performs a game step
+                    {
+                        System.out.println();
+                        game.printGame();
+                    }
+                    else
+                    {
+                        System.out.println(input + " was not a valid word.");
+                    }
                 }
             }
-            else
+            else    // starts a game played by a bot (not played by the person)
             {
                 // computer plays!
                 System.exit(0);
             }
         
-            printPlayAgainMenu();
-            while(!checkMenuSelection(input = in.nextLine()))
+            while(true) // ensures proper input
             {
                 printPlayAgainMenu();
+                input = in.nextLine();
+                if(checkForDebugger(input))
+                {
+                    printDebugMenu();
+                    debugger(in.nextLine());
+                    System.out.println();
+                }
+                else if(!checkMenuSelection(input))
+                {
+                    System.out.println(input + " was not a valid choice.");
+                }
+                else
+                {
+                    break;
+                }
             }
-            if(input.equals("2"))
+            
+            if(input.equals("2")) // terminate program
             {
-                playAgain = false;
+                break;
             }
         }
 
@@ -119,26 +156,42 @@ public class Driver
     }
 
     /**
-     * TODO: I dont like how the method that is supposed to check input also performs the game step.
-     * Checks that user input is a five letter word. If input is "DEBUGGER"
-     * it interupts the current action with the debug window
+     * Checks to make sure input is valid for the game menu. Valid game
+     * menu options are "1" and "2".
+     * 
+     * @param   inputIn User input.
+     * @return  {@code true} if input was valid, {@code false} otherwise.
      */
-    public static boolean checkWord(String inputIn)
+    public static boolean checkMenuSelection(String inputIn)
+    {
+        inputIn = inputIn.toUpperCase();
+        boolean flag = false;
+        
+        if(inputIn.equals("1") || inputIn.equals("2"))  // valid input
+        {
+            flag = true;
+        }
+        else  // prints error and throws false
+        {
+            System.out.println(inputIn + " is not a valid seleciton.");
+        }
+
+        return flag;
+    }
+
+    /**
+     * Checks to see if input was asking for the debug window.
+     * 
+     * @param   inputIn input entered by user.
+     * @return  {@code true} if inputIn was "debugger", 
+     *          {@code false} otherwise.
+     */
+    public static boolean checkForDebugger(String inputIn)
     {
         inputIn = inputIn.toUpperCase();
         boolean retFlag = false;
 
         if(inputIn.equals("DEBUGGER"))
-        {
-            printDebugMenu();
-            debugger(in.nextLine());
-        }
-        else if(!game.playerGuess(inputIn)) 
-        {
-            System.out.println("\n" + inputIn + " is not a five letter word."
-                                 + "\nGuess a five letter word: ");
-        }
-        else
         {
             retFlag = true;
         }
@@ -147,34 +200,11 @@ public class Driver
     }
 
     /**
-     * Checks input for 
-     */
-    public static boolean checkMenuSelection(String inputIn)
-    {
-        inputIn = inputIn.toUpperCase();
-        boolean flag = false;
-        
-        if(inputIn.equals("DEBUGGER"))    // intrusive debug action
-        {
-            printDebugMenu();
-            debugger(in.nextLine());
-        }
-        else if(inputIn.equals("1") || inputIn.equals("2"))  // valid input
-        {
-            flag = true;
-        }
-        else                                                      // prints error and throws false
-        {
-            System.out.println(inputIn + " is not a valid seleciton.");
-        }
-        return flag;
-    }
-
-    /**
      * Performs one of many debug options.
      * 
-     * Returns true if input was recognized.
-     * Returns false if input was not recognized.
+     * @param   inputIn User input.
+     * @return  {@code true} if debug action was successful,
+     *          {@code false} otherwise.
      */
     public static boolean debugger(String inputIn)
     {

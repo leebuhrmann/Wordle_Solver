@@ -97,14 +97,14 @@ public class Game
         }
     }
 
-    /*
+    /**
      * Checks to see if the passed guess is valid. If the passed guess is valid it will
      * score the guess, update the game letter data, and check the completion state.
      * 
      * Returns True, if the guess is in the dictionary and has scored the guess.
      * Returns False, if the guess is not in the dictionary and has not scored the guess.
      */
-    public boolean playerGuess(String guessIn)
+    public boolean gameStep(String guessIn)
     {
         guessIn = guessIn.toUpperCase();
         boolean retFlag = false;
@@ -127,11 +127,14 @@ public class Game
      */
     private void completionState()
     {
-        String guess = guessHistory.get(guessHistory.size() - 1).getWord(); // Gets the string of the last attempted guess
-        if(guess.equals(answer.getWord())
-            || guessHistory.size() >= NUM_ATTEMPTS)
+        if(!guessHistory.isEmpty())
         {
-            completed = true;
+            String guess = guessHistory.get(guessHistory.size() - 1).getWord(); // Gets the string of the last attempted guess
+            if(guess.equals(answer.getWord())
+                || guessHistory.size() >= NUM_ATTEMPTS)
+            {
+                completed = true;
+            }
         }
     }
 
