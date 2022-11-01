@@ -422,10 +422,27 @@ public class Game
      */
     public void printGame()
     {
+        System.out.print("\n============="
+                        + "\n*** Score ***"
+                        + "\n=============\n");
         for(Word g : guessHistory)
         {
-            System.out.println(g.getWord());
-            System.out.println(g.getScore());
+            System.out.println("    " + g.getWord());
+            System.out.println("    " + g.getScore());
+        }
+        System.out.println("\nNumber of attempts left: " + (NUM_ATTEMPTS - guessHistory.size()));
+    }
+
+    public void printResultsPlayer()
+    {
+        System.out.println();
+        if(guessHistory.get(guessHistory.size() - 1).getWord().equals(answer.getWord()))
+        {
+            System.out.println("You won!");
+        }
+        else
+        {
+            System.out.println("Sorry, you lost. The answer was " + answer.getWord());
         }
     }
 
