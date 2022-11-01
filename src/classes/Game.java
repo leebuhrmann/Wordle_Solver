@@ -167,7 +167,6 @@ public class Game
         char[] guessChArr = guessIn.getWordArr();
         char[] answerChArr = answer.getWordArr();
         boolean inPlace = false;
-        boolean occured = true;
 
         /*
          * Checks to see if a character is in the correct position and marks if it has 
@@ -180,9 +179,7 @@ public class Game
             for(int j = 0; j < WORD_LEGNTH; j++)  // Loops through characters in the answer.
             {
                 if(guessChArr[i] == answerChArr[j])
-                {
-                    occured = true;
-                    
+                {         
                     if(i == j)
                     {
                         inPlace = true;
