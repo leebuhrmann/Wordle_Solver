@@ -1,5 +1,6 @@
 package classes;
 
+
 public class Word {
 
     private String word;

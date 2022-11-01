@@ -15,9 +15,6 @@ import classes.Game;
  * Allow Wordle_Letter_Weigher to pass files directly this app, or have this app call that app.7
  */
 
-// TODO: Rewrite all method comments for consistency and understandabilty.
-// TODO: Review comments of working code.
-
 public class Driver 
 {
     static Game game;
@@ -36,7 +33,7 @@ public class Driver
 
         while(true)  
         {
-            while(true) // ensures proper input
+            while(true) // Ensures proper input.
             {
                 printSelectionMenu();
                 input = in.nextLine();
@@ -56,20 +53,20 @@ public class Driver
                 }
             }   
 
-            if(input.equals("1"))   // starts a game played by a person (not played by a bot)
+            if(input.equals("1"))   // Starts a game played by a person (not played by a bot).
             {
-                game = new Game(dictionaryFile, weightedListFile);
+                game = new Game(dictionaryFile, weightedListFile, "About");
                 while(!game.completed())
                 {
                     System.out.print("\nGuess a five letter word: ");
                     input = in.nextLine();
-                    if(checkForDebugger(input)) // checks for intrusive debugging action
+                    if(checkForDebugger(input)) // Checks for intrusive debugging action.
                     {
                         printDebugMenu();
                         debugger(in.nextLine());
                         System.out.println();
                     }
-                    else if(game.gameStep(input)) // checks input and possibly performs a game step
+                    else if(game.gameStep(input)) // Checks input and possibly performs a game step.
                     {
                         System.out.println();
                         game.printGame();
@@ -80,13 +77,13 @@ public class Driver
                     }
                 }
             }
-            else    // starts a game played by a bot (not played by the person)
+            else    // Starts a game played by a bot (not played by the person).
             {
-                // computer plays!
+                // Computer plays!
                 System.exit(0);
             }
         
-            while(true) // ensures proper input
+            while(true) // Ensures proper input.
             {
                 printPlayAgainMenu();
                 input = in.nextLine();
@@ -106,7 +103,7 @@ public class Driver
                 }
             }
             
-            if(input.equals("2")) // terminate program
+            if(input.equals("2")) // Terminate program.
             {
                 break;
             }
@@ -165,11 +162,11 @@ public class Driver
         inputIn = inputIn.toUpperCase();
         boolean flag = false;
         
-        if(inputIn.equals("1") || inputIn.equals("2"))  // valid input
+        if(inputIn.equals("1") || inputIn.equals("2"))  // Is valid input.
         {
             flag = true;
         }
-        else  // prints error and throws false
+        else  // Prints error and throws false.
         {
             System.out.println(inputIn + " is not a valid seleciton.");
         }
