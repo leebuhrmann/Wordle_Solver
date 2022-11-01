@@ -1,4 +1,5 @@
 package classes;
+
 public class Word {
 
     private String word;
@@ -11,18 +12,38 @@ public class Word {
      */
     private int[] letterOccNum;
 
+    /**
+     * Creates a Word to be used in a Game. This Word knows the number of occurrences of
+     * each letter of the alphabet within itself. It also stores a possible score of that
+     * word against a Game's answer.
+     * 
+     * @param   wordIn    A word.
+     * @param   scoreIn   A score of a word.
+     */
     public Word(String wordIn, String scoreIn)
     {
         score = scoreIn;
         constructorHelper(wordIn);
     }
 
+    /**
+     * Creates a Word to be used in a Game. This Word knows the number of occurrences of
+     * each letter of the alphabet within itself. It also stores a possible score of that
+     * word against a Game's answer.
+     * 
+     * @param   wordIn A word.
+     */
     public Word(String wordIn)
     {
         score = null;
         constructorHelper(wordIn);
     }
 
+    /**
+     * Assist the constructors with instantiating fields of this Word.
+     * 
+     * @param   wordIn  A word
+     */
     private void constructorHelper(String wordIn)
     {
         word = wordIn.toUpperCase();
@@ -31,8 +52,8 @@ public class Word {
         letterCounter();
     }
 
-    /*
-     * Counts the number of occurrences of each letter in this word
+    /**
+     * Counts the number of occurrences of each letter in this Word.
      */
     private void letterCounter()
     {
@@ -42,40 +63,51 @@ public class Word {
         }
     }
 
-    /*
-     * Sets score.
+    /**
+     * Sets the score of this Word.
+     * 
+     * @param   scoreIn   The score to be set.
      */
     public void setScore(String scoreIn)
     {
         score = scoreIn;
     }
 
-    /*
-     * Returns word as a String
+    /**
+     * Returns this Word as a String.
+     * 
+     * @return  This word as a String.
      */
     public String getWord()
     {
         return word;
     }
 
-    /*
-     * Returns word as a character array
+    /**
+     * Returns this Word as a character array.
+     * 
+     * @return  this Word as a character array.
      */
     public char[] getWordArr()
     {
         return wordArr;
     }
 
-    /*
-     * Returns score as a String
+    /**
+     * Returns this Word's score as a String.
+     * @return  this Word's score as a String.
      */
     public String getScore()
     {
         return score;
     }
 
-    /*
-     * Returns an int[] containing the number of occurrences of each letter
+    /**
+     * Returns an integer array containing the number of occurrences of each
+     * letter in this Word.
+     * 
+     * @return  an integer array containing the number of occurrences of each
+     * letter in this Word.
      */
     public int[] getLetterOccurrences()
     {

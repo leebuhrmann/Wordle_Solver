@@ -6,20 +6,33 @@ public class Letter {
     private static final int WORD_SIZE = 5;
 
     private int minOcc;
-    private int maxOcc;         //if 0, means it is not a correct letter
+    private int maxOcc;         //if 0, this letter is not in the Game's answer.
     private char lett;
-    private ArrayList<Integer> correctPlacement;
+    private ArrayList<Integer> correctPosition;
     private ArrayList<Integer> notAttemptedPlacements;
-    private ArrayList<Integer> weightedPlacements;       // The number of occurences of this letter at a specific placment. The placement is the index.
-    private ArrayList<Integer> sortedPlacements;   // The most common placement of this letter determined by its weighted values, ordered by most common to least common.
+    /*
+     * The number of occurences of this letter at a specific position. That position is the value
+     * found at the corresponding index of sortedPlacements list.
+     */
+    private ArrayList<Integer> weightedPlacements;
+    /*
+     * The most common position of this letter determined by its weighted values, ordered by most common to least common.
+     */
+    private ArrayList<Integer> sortedPlacements;
     
-
+    /**
+     * Creates a Letter that represents a single character of the alphabet and its
+     * agrigate game data within a Game.
+     * 
+     * @param   lettIn    The letter of the alphabet this Object represents.
+     * @param   weightsIn   The positional weight data of this letter in a Game.
+     */
     public Letter(char lettIn, int[] weightsIn)
     {
         lett = Character.toUpperCase(lettIn);
         minOcc = 0;
         maxOcc = WORD_SIZE;
-        correctPlacement = new ArrayList<Integer>();
+        correctPosition = new ArrayList<Integer>();
         notAttemptedPlacements = new ArrayList<Integer>();
         for(int i = 0; i < WORD_SIZE; i++)
         {
@@ -39,6 +52,10 @@ public class Letter {
         orderPlacements();
     }
 
+    /**
+     * Uses bubble sort to order the positional weight data according to
+     * this letters most common position to least common position.
+     */
     private void orderPlacements()
     {
         //bubble sort
@@ -62,43 +79,79 @@ public class Letter {
         }
     }
 
+    /**
+     * Sets the minimum number of occurences of this Letter in a Game.
+     * 
+     * @param   minOccIn    The minuimum number of occurrences to be set.
+     */
     public void setMinOcc(int minOccIn)
     {
         minOcc = minOccIn;
     }
 
+    /**
+     * Returns the minimum number of occurrences of this Letter in a Game.
+     * 
+     * @return  the minimum number of occurrences of this Letter in a Game.
+     */
     public int getMinOcc()
     {
         return minOcc;
     }
 
+    /**
+     * Sets the maximum number of occurrences of this Letter in a Game.
+     * 
+     * @param   occIn   the maximum number of occurrences of this Letter in a Game.
+     */
     public void setMaxOcc(int occIn)
     {
         maxOcc = occIn;
     }
 
+    /**
+     * Returns the maximum number of occurrences of this Letter in a Game.
+     * 
+     * @return  the maximum number of occurrences of this Letter in a Game.
+     */
     public int getMaxOcc()
     {
         return maxOcc;
     }
 
+    /**
+     * Returns the character that represents this Letter.
+     * 
+     * @return  the character that represents this Letter.
+     */
     public char getLett()
     {
         return lett;
     }
 
-    public void addCorrect(int placement)
+    /**
+     * Adds the passed position to a list of correct positions.
+     * 
+     * @param position A correct position to be added.
+     */
+    public void addCorrect(int position)
     {
-        correctPlacement.add(placement);
+        correctPosition.add(position);
     }
 
+    /**
+     * Returns the list of correct positions.
+     * 
+     * @return  the list of correct positions.
+     */
     public ArrayList<Integer> getCorrect()
     {
-        return correctPlacement;
+        return correctPosition;
     }
 
-    /*
-     * Removes the passed placement from the notAttempted list.
+    /**
+     * 
+     * @param placement
      */
     public void attempted(Integer placement)
     {
@@ -133,14 +186,14 @@ public class Letter {
             System.out.printf("%-4d", weightedPlacements.get(i));
         }
         System.out.printf("\n%13s :", "Correct");
-        if(correctPlacement.isEmpty())
+        if(correctPosition.isEmpty())
         {
             System.out.print(" Empty");
         }
         {
-            for(int i = 0; i < correctPlacement.size(); i ++)
+            for(int i = 0; i < correctPosition.size(); i ++)
             {
-                System.out.print(" " + correctPlacement.get(i));
+                System.out.print(" " + correctPosition.get(i));
             }
         }
         System.out.printf("\n%13s :", "Not Attempted");

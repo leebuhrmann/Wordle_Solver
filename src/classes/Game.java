@@ -73,8 +73,7 @@ public class Game
     }
 
     /**
-     * Assist the constructors with instantiating fields of this Game. Also calls functions
-     * to collect data passed by Files.
+     * Assist the constructors with instantiating fields of this Game.
      * 
      * @param   dictionaryIn    The File containing all the playable words of this game.
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
@@ -140,8 +139,7 @@ public class Game
     }
 
     /**
-     * Checks to see if this Game has completed and sets this Game's state to
-     * reflect that.
+     * Detects and sets the completion state of this Game.
      */
     private void completionState()
     {
@@ -156,10 +154,12 @@ public class Game
         }
     }
 
-    /*
+    /**
      * Updates known letter data after a guess is scored.
+     * 
+     * @param   guessIn The last scored guess.
      */
-    public void updateLetters(Word guessIn)
+    private void updateLetters(Word guessIn)
     {
         char[] guessChArr = guessIn.getWordArr();
         char[] answerChArr = answer.getWordArr();
@@ -210,10 +210,14 @@ public class Game
         }
     }
     
-    /*
+    /**
      * Returns a score of a guess against the answer.
+     * 
+     * @param   guessIn The word to be scored against this Game's answer.
+     * 
+     * @return  The score of guessIn.
      */
-    public String score(Word guessIn)
+    private String score(Word guessIn)
     {
         char[] guessChArr = guessIn.getWordArr();
         char[] answerChArr = answer.getWordArr();
@@ -262,8 +266,12 @@ public class Game
         return new String(score);
     }
 
-    /*
-     * Reurns a Letter object of this game specified by its character.
+    /**
+     * Returns a Letter object of this game specified by its character.
+     * 
+     * @param   lettIn  The label of the desired Letter object.
+     * 
+     * @return  A specified Letter of this Game.
      */
     public Letter getLetter(char lettIn)
     {
@@ -271,16 +279,18 @@ public class Game
         return letters.get(lettIn - CHAR_SHIFT);
     }
 
-    /*
+    /**
      * Returns the answer as a String.
+     * 
+     * @return The answer of this Game.
      */
     public String getAnswer()
     {
         return answer.getWord();
     }
 
-    /*
-    * Fills list with Instantiated Letters.
+    /**
+    * Fills the letters list with Instantiated Letters.
     */
     private void fillLetters()
     {
@@ -298,8 +308,10 @@ public class Game
         }
     }
 
-    /*
-    * Collect data from file.
+    /**
+    * Collect positional weight data from this.weightedListFIle.
+    *
+    * @throws FileNotFoundException
     */
     private void collectWeightData() throws FileNotFoundException
     {
@@ -324,8 +336,10 @@ public class Game
         in.close();
     }
 
-    /*
-    * Collect every word from dictionary and stores it in wordList.
+    /**
+    * Collect every word from this.dictionary.
+    *
+    * @throws   FileNotFoundException
     */
     private void collectDictionaryWords() throws FileNotFoundException
     {
@@ -348,15 +362,18 @@ public class Game
         in.close();
     }
 
-    /*
+    /**
      * Returns whether the game has been completed or not.
+     * 
+     * @return  {@code true} if the game has been completed,
+     *          {@code false} otherwise.
      */
     public boolean completed()
     {
         return completed;
     }
     
-    /*
+    /**
     * Prints positional weight data.
     */
     public void printWeightData()
@@ -371,8 +388,10 @@ public class Game
         }
     }
 
-    /*
+    /**
     * Prints everyword in the wordlist.
+    *
+    * Warning: Large number of words printed.
     */
     public void printDictionary()
     {
@@ -384,7 +403,7 @@ public class Game
         }
     }
 
-    /*
+    /**
      * Prints current game results.
      */
     public void printGame()
@@ -396,7 +415,7 @@ public class Game
         }
     }
 
-    /*
+    /**
      * Prints all Letters and their data.
      */
     public void printLetters()
@@ -407,7 +426,7 @@ public class Game
         }
     }
 
-    /*
+    /**
      * Prints answer data.
      */
     public void printAnswerData()
