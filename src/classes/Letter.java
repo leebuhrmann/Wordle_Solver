@@ -9,16 +9,16 @@ public class Letter {
     private int maxOcc;         //if 0, this letter is not in the Game's answer.
     private char lett;
     private ArrayList<Integer> correctPosition;
-    private ArrayList<Integer> notAttemptedPlacements;
+    private ArrayList<Integer> notAttemptedPositions;
     /*
      * The number of occurences of this letter at a specific position. That position is the value
-     * found at the corresponding index of sortedPlacements list.
+     * found at the corresponding index of sortedPositions list.
      */
-    private ArrayList<Integer> weightedPlacements;
+    private ArrayList<Integer> weightedPositions;
     /*
      * The most common position of this letter determined by its weighted values, ordered by most common to least common.
      */
-    private ArrayList<Integer> sortedPlacements;
+    private ArrayList<Integer> sortedPositions;
     
     /**
      * Creates a Letter that represents a single character of the alphabet and its
@@ -33,47 +33,47 @@ public class Letter {
         minOcc = 0;
         maxOcc = WORD_SIZE;
         correctPosition = new ArrayList<Integer>();
-        notAttemptedPlacements = new ArrayList<Integer>();
+        notAttemptedPositions = new ArrayList<Integer>();
         for(int i = 0; i < WORD_SIZE; i++)
         {
-            notAttemptedPlacements.add(i);
+            notAttemptedPositions.add(i);
         }
 
-        weightedPlacements = new ArrayList<Integer>();
+        weightedPositions = new ArrayList<Integer>();
         for(int i = 0; i < WORD_SIZE; i++)
         {
-            weightedPlacements.add(weightsIn[i]);
+            weightedPositions.add(weightsIn[i]);
         }
-        sortedPlacements = new ArrayList<Integer>();
+        sortedPositions = new ArrayList<Integer>();
         for(int i = 0; i < WORD_SIZE; i++)
         {
-            sortedPlacements.add(i);
+            sortedPositions.add(i);
         }
-        orderPlacements();
+        orderPositions();
     }
 
     /**
-     * Uses bubble sort to order the positional weight data according to
+     * Orders the positional weight data according to
      * this letters most common position to least common position.
      */
-    private void orderPlacements()
+    private void orderPositions()
     {
         //bubble sort
-        int n = weightedPlacements.size();
+        int n = weightedPositions.size();
         for (int i = 0; i < n - 1; i++)
         {
             for (int j = 0; j < n - i - 1; j++)
             {
-                if (weightedPlacements.get(j) < weightedPlacements.get(j + 1))
+                if (weightedPositions.get(j) < weightedPositions.get(j + 1))
                 {
                     // swap arr[j+1] and arr[j]
-                    int temp = weightedPlacements.get(j);
-                    weightedPlacements.set(j, weightedPlacements.get(j + 1));
-                    weightedPlacements.set(j + 1, temp);
+                    int temp = weightedPositions.get(j);
+                    weightedPositions.set(j, weightedPositions.get(j + 1));
+                    weightedPositions.set(j + 1, temp);
 
-                    temp = sortedPlacements.get(j);
-                    sortedPlacements.set(j, sortedPlacements.get(j + 1));
-                    sortedPlacements.set(j + 1, temp);
+                    temp = sortedPositions.get(j);
+                    sortedPositions.set(j, sortedPositions.get(j + 1));
+                    sortedPositions.set(j + 1, temp);
                 }
             }
         }
@@ -132,7 +132,7 @@ public class Letter {
     /**
      * Adds the passed position to a list of correct positions.
      * 
-     * @param position A correct position to be added.
+     * @param   position    a correct position to be added.
      */
     public void addCorrect(int position)
     {
@@ -150,25 +150,35 @@ public class Letter {
     }
 
     /**
+     * Removes the passed position from the list of positions that have not yet been attempted.
      * 
-     * @param placement
+     * @param   position   the position that has been attempted.
      */
-    public void attempted(Integer placement)
+    public void attempted(Integer position)
     {
-        notAttemptedPlacements.remove(placement);
+        notAttemptedPositions.remove(position);
     }
 
+    /**
+     * Returns the list of postions that have not been attempted.
+     * @return  the list of positions that have not been attempted.
+     */
     public ArrayList<Integer> getNotAttempted()
     {
-        return notAttemptedPlacements;
+        return notAttemptedPositions;
     }
 
+    /**
+     * Returns the list of positions sorted from most common to least common.
+     * 
+     * @return  the list of positions sorted from most common to least common.
+     */
     public ArrayList<Integer> getSorted()
     {
-        return sortedPlacements;
+        return sortedPositions;
     }
 
-    /*
+    /**
      * Prints the data of this Letter
      */
     public void printLetterData()
@@ -178,12 +188,12 @@ public class Letter {
         System.out.printf("\n%13s : ", "Order");
         for(int i = 0; i < WORD_SIZE; i++)
         {
-            System.out.printf("%-4d", sortedPlacements.get(i));
+            System.out.printf("%-4d", sortedPositions.get(i));
         }
         System.out.printf("\n%13s : ", "Weight");
         for(int i = 0; i < WORD_SIZE; i ++)
         {
-            System.out.printf("%-4d", weightedPlacements.get(i));
+            System.out.printf("%-4d", weightedPositions.get(i));
         }
         System.out.printf("\n%13s :", "Correct");
         if(correctPosition.isEmpty())
@@ -197,13 +207,13 @@ public class Letter {
             }
         }
         System.out.printf("\n%13s :", "Not Attempted");
-        if(notAttemptedPlacements.isEmpty())
+        if(notAttemptedPositions.isEmpty())
         {
             System.out.print(" Empty");
         }
-        for(int i = 0; i < notAttemptedPlacements.size(); i ++)
+        for(int i = 0; i < notAttemptedPositions.size(); i ++)
         {
-            System.out.print(" " + notAttemptedPlacements.get(i));
+            System.out.print(" " + notAttemptedPositions.get(i));
         }
         System.out.printf("\n%13s : %d", "Minimum", minOcc);
         System.out.printf("\n%13s : %d", "Maximum", maxOcc);
