@@ -47,6 +47,9 @@ public class Game
 
     /**
      * Creates a game with a random answer.
+     * 
+     * @param   dictionaryIn    The File containing all the playable words of this game.
+     * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      */
     public Game(File dictionaryIn, File weightedListFileIn) 
     {
@@ -56,8 +59,12 @@ public class Game
         answer = new Word(answerStr);
     }
 
-    /*
-     * Creates a game with a specified answer.
+    /**
+     * Creates a game with a random answer.
+     * 
+     * @param   dictionaryIn    The File containing all the playable words of this game.
+     * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
+     * @param   answerIn    The word to be set as the answer for this Game.
      */
     public Game(File dictionaryIn, File weightedListFileIn, String answerIn)
     {
@@ -65,8 +72,12 @@ public class Game
         answer = new Word(answerIn);
     }
 
-    /*
-     * Assists the constructors.
+    /**
+     * Assist the constructors with instantiating fields of this Game. Also calls functions
+     * to collect data passed by Files.
+     * 
+     * @param   dictionaryIn    The File containing all the playable words of this game.
+     * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      */
     private void constructorHelper(File dictionaryIn, File weightedListFileIn)
     {
@@ -98,11 +109,17 @@ public class Game
     }
 
     /**
+     * Attempts to perform a single game step.
+     * 
      * Checks to see if the passed guess is valid. If the passed guess is valid it will
      * score the guess, update the game letter data, and check the completion state.
      * 
-     * Returns True, if the guess is in the dictionary and has scored the guess.
-     * Returns False, if the guess is not in the dictionary and has not scored the guess.
+     * @param   guessIn The word to be validated with the working dictionary and scored
+     * against this Game's answer.
+     * 
+     * @return  {@code true} if the guess is in the dictionary and has scored the guess.
+     *          {@code false} if the guess is not in the dictionary and has not scored 
+     *          the guess.
      */
     public boolean gameStep(String guessIn)
     {
@@ -122,8 +139,9 @@ public class Game
         return retFlag;
     }
 
-    /*
-     * Checks to see if the player has run out of attempts or guessed the correct word.
+    /**
+     * Checks to see if this Game has completed and sets this Game's state to
+     * reflect that.
      */
     private void completionState()
     {
