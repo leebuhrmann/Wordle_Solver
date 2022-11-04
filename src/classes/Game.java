@@ -110,6 +110,44 @@ public class Game
         }
     }
 
+    public void botPlays()
+    {
+        while(!completed())
+        {
+            gameStep(makeGuess());
+        }
+    }
+
+    public String makeGuess()
+    {
+        char[] makeGuess = new char[5]; //TODO: will probably need to make this a class field to be accessed by any function
+        ArrayList<Letter> toRecurse = new ArrayList<Letter>();
+
+        for(Letter l : letters)     // Loop through all letters.
+        {
+            ArrayList<Integer> correctPos = l.getCorrect(); // Grab list of all correct positions for that letter.
+
+            if(!correctPos.isEmpty())
+            {
+                for(Integer n : correctPos)             // Assign that letter to all correct positions in the current guess being made.
+                {
+                    makeGuess[n] = l.getLett();
+                }
+            }
+
+            int difference = l.getMinOcc() - correctPos.size();
+            for(int i = 0; i < difference; i++)            // Add this letter a number of times TODO: writing comments hard
+            {
+                toRecurse.add(l);                              
+            }
+        }
+
+
+
+
+        return new String(makeGuess);
+    }
+
     /**
      * Attempts to perform a single game step.
      * 

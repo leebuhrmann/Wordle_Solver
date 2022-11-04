@@ -80,8 +80,9 @@ public class Driver
             }
             else    // Starts a game played by a bot (not played by the person).
             {
-                // Computer plays!
-                System.exit(0);
+                game = new Game(dictionaryFile, weightedListFile);
+                game.botPlays();
+                game.printResultsBot();
             }
         
             while(true) // Ensures proper input.
