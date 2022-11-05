@@ -32,12 +32,16 @@ public class Game
      * Contains a weighted value for each character of the alphabet. The value represents the
      * number of times that character as found in that position of all the words in the dictionary.
      */
-    // private int[] p1Weights;
-    // private int[] p2Weights;
-    // private int[] p3Weights;
-    // private int[] p4Weights;
-    // private int[] p5Weights; 
     private int[][] pWeights;
+    /*
+     * The positional weights sorted from most common Letter to least common Letter
+     */
+    private Letter[][] pSorted;
+    /*
+     * The weighted values for the Letters in pSorted. Matched by index.
+     */
+    private int[][] pSortedWeights;
+
 
     /*
      * Game and Score fields.
@@ -57,8 +61,7 @@ public class Game
     public Game(File dictionaryIn, File weightedListFileIn) 
     {
         constructorHelper(dictionaryIn, weightedListFileIn);
-        // Create a random answer for this Game.
-        Random rand = new Random();
+        Random rand = new Random(); // Create a random answer for this Game.
         String answerStr = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE + 1));
         answer = new Word(answerStr);
     }
@@ -73,8 +76,7 @@ public class Game
     public Game(File dictionaryIn, File weightedListFileIn, String answerIn)
     {
         constructorHelper(dictionaryIn, weightedListFileIn);
-        // Create specified answer for this Game.
-        answer = new Word(answerIn);
+        answer = new Word(answerIn); // Create specified answer for this Game.
     }
 
     /**
@@ -87,11 +89,8 @@ public class Game
     {
         guessHistory = new ArrayList<Word>();
         pWeights = new int[WORD_LEGNTH][ALPHABET_SIZE];
-        // p1Weights = new int[ALPHABET_SIZE];
-        // p2Weights = new int[ALPHABET_SIZE];
-        // p3Weights = new int[ALPHABET_SIZE];
-        // p4Weights = new int[ALPHABET_SIZE];
-        // p5Weights = new int[ALPHABET_SIZE];
+        pSorted = new Letter[WORD_LEGNTH][ALPHABET_SIZE];
+        pSortedWeights = new int[WORD_LEGNTH][ALPHABET_SIZE];
         wordList = new ArrayList<String>();
         letters = new ArrayList<Letter>();
         completed = false;
@@ -100,6 +99,7 @@ public class Game
         {
             collectWeightData(weightedListFileIn);
             fillLetters();
+            processWeightData();
             collectDictionaryWords(dictionaryIn);
         }
         catch(FileNotFoundException fnfe)
@@ -110,6 +110,9 @@ public class Game
         }
     }
 
+    /**
+     * Plays a game where the computer makes its own guesses until it finds the answer.
+     */
     public void botPlays()
     {
         while(!completed())
@@ -118,9 +121,18 @@ public class Game
         }
     }
 
+    /**
+     * stuff
+     * @return
+     */
     public String makeGuess()
     {
-        char[] makeGuess = new char[5]; //TODO: will probably need to make this a class field to be accessed by any function
+        char[] makeGuess = new char[WORD_LEGNTH];
+        for(int i = 0; i < makeGuess.length; i++) // Fill new guess with 'blanks'
+        {
+            makeGuess[i] = ' ';
+        }
+      
         ArrayList<Letter> toRecurse = new ArrayList<Letter>();
 
         for(Letter l : letters)     // Loop through all letters.
@@ -136,16 +148,84 @@ public class Game
             }
 
             int difference = l.getMinOcc() - correctPos.size();
-            for(int i = 0; i < difference; i++)            // Add this letter a number of times TODO: writing comments hard
+            for(int i = 0; i < difference; i++)            
             {
                 toRecurse.add(l);                              
             }
         }
 
-
-
+        makeGuess = makeGuessRecurseA(toRecurse, makeGuess);
 
         return new String(makeGuess);
+    }
+
+    /**
+     * more stuff
+     * @param toRecurseIn
+     * @param makeGuessIn
+     * @return
+     */
+    private char[] makeGuessRecurseA(ArrayList<Letter> toRecurseIn, char[] makeGuessIn)
+    {
+        
+        ArrayList<Integer> blanks = new ArrayList<Integer>();
+        char[] makeGuess = makeGuessIn;
+
+        for(int i = 0; i < makeGuess.length; i++) // Make a list of blank positions of the current guess.
+        {
+            if(makeGuess[i] == ' ') // if 'blank'.
+            {
+                blanks.add(i);
+            }
+        }
+
+        if(!toRecurseIn.isEmpty())
+        {
+            Letter l = toRecurseIn.get(0);
+            toRecurseIn.remove(0);
+            ArrayList<Integer> lSortedCopy = new ArrayList<Integer>();
+            for(Integer n : l.getSorted())  // Create deep copy of sorted list.
+            {
+                lSortedCopy.add(n);
+            }
+
+            for(int n : blanks) // Creates a sorted list of blanks in order of weight for this letter. 
+            {
+                if(!lSortedCopy.contains(n))
+                {
+                    lSortedCopy.remove((Integer) n); 
+                }
+            }
+
+            for(int i = 0; i < lSortedCopy.size(); i++) // Puts Letter l in the highest weighted blank position. 
+            {
+                makeGuess[lSortedCopy.get(i)] = l.getLett();
+                char[] makeGuessTemp = makeGuessRecurseA(toRecurseIn, makeGuess);   // Continue recursing to make a word.
+                if(makeGuessTemp != makeGuess)  // If array returned from recurse is different than array passed to recurse, the recurse returned an acceptable word.
+                {
+                    return makeGuessTemp;   // Return found word as character array.
+                }
+
+                makeGuess = makeGuessIn;    // If returned array was the same, reset makeGuess and try the next highest weighted blank position.
+            }
+
+            return makeGuessIn;
+        }
+        else
+        {
+            return makeGuessRecurseB(blanks, makeGuess);    
+        }
+    }
+
+    private char[] makeGuessRecurseB(ArrayList<Integer> blanks, char[] makeGuess)
+    {
+        if(!blanks.isEmpty())
+        {
+            for(Integer n : blanks)
+            {
+
+            }
+        }
     }
 
     /**
@@ -343,6 +423,35 @@ public class Game
     }
 
     /**
+    * Process positional weight data from passed File.
+    *
+    * @param    weightedListFileIn  the File to be processed.
+    * @throws   FileNotFoundException
+    */
+    private void collectWeightData(File weightedListFileIn) throws FileNotFoundException
+    {
+        int n = 0;
+        Scanner in = new Scanner(weightedListFileIn);
+        
+        while(in.hasNextLine() && n < ALPHABET_SIZE)
+        {
+            String record = in.nextLine();
+            Scanner lineParser = new Scanner(record);
+            lineParser.useDelimiter(",");
+            
+            for(int j = 0; j < WORD_LEGNTH; j++)
+            {
+                pWeights[j][n] = lineParser.nextInt();
+                pSortedWeights[j][n] = pWeights[j][n];
+            }
+
+            lineParser.close();
+            n++;
+        }
+        in.close();
+    }
+
+    /**
     * Fills the letters list with Instantiated Letters.
     */
     private void fillLetters()
@@ -360,35 +469,51 @@ public class Game
     }
 
     /**
-    * Collect positional weight data from this.weightedListFIle.
-    *
-    * @throws FileNotFoundException
-    */
-    private void collectWeightData(File weightedListFileIn) throws FileNotFoundException
+     * Process weight data into additional sorted lists.
+     */
+    private void processWeightData()
     {
-        int i = 0;
-        Scanner in = new Scanner(weightedListFileIn);
-        while(in.hasNextLine() && i < ALPHABET_SIZE)
+         /*
+         * Fills pSorted with letters in each position in alphabetical order.
+         */
+        for(int i = 0; i < WORD_LEGNTH; i++)
         {
-            String record = in.nextLine();
-            Scanner lineParser = new Scanner(record);
-            lineParser.useDelimiter(",");
-            
-            for(int j = 0; j < WORD_LEGNTH; j++)
+            for(int j = 0; j < ALPHABET_SIZE; j++)
             {
-                pWeights[j][i] = lineParser.nextInt();
+                pSorted[i][j] = letters.get(j);
             }
-
-            lineParser.close();
-            i++;
         }
 
-        in.close();
+        /*
+         * Sorts every position by most common letter to least common letter.
+         */
+        for(int i = 0; i < WORD_LEGNTH; i++)
+        {
+            int a = ALPHABET_SIZE;
+            for (int j = 0; j < a - 1; j++)
+            {
+                for (int k = 0; k < a - j - 1; k++)
+                {
+                    if (pSortedWeights[i][k] < pSortedWeights[i][k + 1])
+                    {
+                        // swap arr[k+1] and arr[k]
+                        int temp = pSortedWeights[i][k];
+                        pSortedWeights[i][k] = pSortedWeights[i][k + 1];
+                        pSortedWeights[i][k + 1] = temp;
+
+                        Letter lTemp = pSorted[i][k];
+                        pSorted[i][k] = pSorted[i][k + 1];
+                        pSorted[i][k + 1] = lTemp;
+                    }
+                }
+            }
+        }
     }
 
     /**
-    * Collect every word from this.dictionary.
+    * Collect every word from passed File.
     *
+    * @param    dictionaryIn    the File to be collected.
     * @throws   FileNotFoundException
     */
     private void collectDictionaryWords(File dictionaryIn) throws FileNotFoundException
@@ -435,6 +560,17 @@ public class Game
             for(int j = 0; j < WORD_LEGNTH; j++)
             {
                 System.out.printf(" %3d |", pWeights[j][i]);
+            }
+            System.out.println();
+        }
+
+        System.out.print("\nPOS| 1 | 2 | 3 | 4 | 5 |\n");
+        for(int i = 0; i < ALPHABET_SIZE; i++)
+        {
+            System.out.printf(" * |");
+            for(int j = 0; j < WORD_LEGNTH; j++)
+            {
+                System.out.printf(" %c |", pSorted[j][i].getLett());
             }
             System.out.println();
         }

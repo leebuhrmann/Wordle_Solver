@@ -81,8 +81,8 @@ public class Driver
             else    // Starts a game played by a bot (not played by the person).
             {
                 game = new Game(dictionaryFile, weightedListFile);
-                game.botPlays();
-                game.printResultsBot();
+                // game.botPlays();
+                // game.printResultsBot();
             }
         
             while(true) // Ensures proper input.
