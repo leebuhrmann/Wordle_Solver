@@ -4,29 +4,31 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Game
 {
+    // ############# Constant Parameters #############
+
     /*
-     * Game parameters.
+     * This value is the number of words at the beggining of the dictionary that can be answers.
+     * The rest of the words can be accepted, but are not answers.
      */
-    private static final int NUM_ATTEMPTS = 6;
-    private static final int WORD_LEGNTH = 5;
+    private static final int CORRECT_WORD_LIST_SIZE = 2314;
     /*
      * Used to shift a character on the ANSII table into a int representing its number in the alphabet
      * and vice a versa.
      */
     private static final int CHAR_SHIFT = 65;
     private static final int ALPHABET_SIZE = 26;
-    /*
-     * This value is the number of words at the beggining of the dictionary that can be answers.
-     * The rest of the words can be accepted, but are not answers.
-     */
-    private static final int CORRECT_WORD_LIST_SIZE = 2314;
+    private static final int WORD_LEGNTH = 5;
 
-    /*
-     * Files data.
-     */
+
+    // ############# Files Data #############
+
+     /*
+      * Contains every word in the passed dictionary File.
+      */
     private ArrayList<String> wordList;
     /*
      * Contains a weighted value for each character of the alphabet. The value represents the
@@ -42,14 +44,14 @@ public class Game
      */
     private int[][] pSortedWeights;
 
+    // ############# Game and Scored Fields #############
 
-    /*
-     * Game and Score fields.
-     */
+    private int num_attempts;
     private ArrayList<Letter> letters;
     private boolean completed;
     private Word answer;
     private ArrayList<Word> guessHistory;
+    private char[] guess;
     
 
     /**
@@ -58,9 +60,9 @@ public class Game
      * @param   dictionaryIn    The File containing all the playable words of this game.
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      */
-    public Game(File dictionaryIn, File weightedListFileIn) 
+    public Game(File dictionaryIn, File weightedListFileIn, int numAttemptsIn) 
     {
-        constructorHelper(dictionaryIn, weightedListFileIn);
+        constructorHelper(dictionaryIn, weightedListFileIn, numAttemptsIn);
         Random rand = new Random(); // Create a random answer for this Game.
         String answerStr = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE + 1));
         answer = new Word(answerStr);
@@ -73,9 +75,9 @@ public class Game
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      * @param   answerIn    The word to be set as the answer for this Game.
      */
-    public Game(File dictionaryIn, File weightedListFileIn, String answerIn)
+    public Game(File dictionaryIn, File weightedListFileIn, String answerIn, int numAttemptsIn)
     {
-        constructorHelper(dictionaryIn, weightedListFileIn);
+        constructorHelper(dictionaryIn, weightedListFileIn, numAttemptsIn);
         answer = new Word(answerIn); // Create specified answer for this Game.
     }
 
@@ -85,8 +87,9 @@ public class Game
      * @param   dictionaryIn    The File containing all the playable words of this game.
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      */
-    private void constructorHelper(File dictionaryIn, File weightedListFileIn)
+    private void constructorHelper(File dictionaryIn, File weightedListFileIn, int numAttemptsIn)
     {
+        num_attempts = numAttemptsIn;
         guessHistory = new ArrayList<Word>();
         pWeights = new int[WORD_LEGNTH][ALPHABET_SIZE];
         pSorted = new Letter[WORD_LEGNTH][ALPHABET_SIZE];
@@ -94,6 +97,7 @@ public class Game
         wordList = new ArrayList<String>();
         letters = new ArrayList<Letter>();
         completed = false;
+        guess = new char[WORD_LEGNTH];
 
         try
         {
@@ -115,9 +119,16 @@ public class Game
      */
     public void botPlays()
     {
-        while(!completed())
+        //Random rand = new Random();
+        //char[] makeGuess = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
+        char[] makeGuess = {'S','U','P','E','R'};
+        setGuess(makeGuess);
+        gameStep(new String(getGuess()));
+
+        while(!completed() && makeGuess())
         {
-            gameStep(makeGuess());
+            String guessString = new String(getGuess());
+            gameStep(guessString);
         }
     }
 
@@ -125,13 +136,14 @@ public class Game
      * stuff
      * @return
      */
-    public String makeGuess()
+    public boolean makeGuess()
     {
-        char[] makeGuess = new char[WORD_LEGNTH];
+        char[] makeGuess = getGuess();
         for(int i = 0; i < makeGuess.length; i++) // Fill new guess with 'blanks'
         {
             makeGuess[i] = ' ';
         }
+        setGuess(makeGuess);
       
         ArrayList<Letter> toRecurse = new ArrayList<Letter>();
 
@@ -154,9 +166,7 @@ public class Game
             }
         }
 
-        makeGuess = makeGuessRecurseA(toRecurse, makeGuess);
-
-        return new String(makeGuess);
+        return makeGuessRecurseA(toRecurse, makeGuess);
     }
 
     /**
@@ -165,17 +175,16 @@ public class Game
      * @param makeGuessIn
      * @return
      */
-    private char[] makeGuessRecurseA(ArrayList<Letter> toRecurseIn, char[] makeGuessIn)
+    private boolean makeGuessRecurseA(ArrayList<Letter> toRecurseIn, char[] makeGuessIn)
     {
-        
-        ArrayList<Integer> blanks = new ArrayList<Integer>();
+        Stack<Integer> blanks = new Stack<Integer>();
         char[] makeGuess = makeGuessIn;
 
-        for(int i = 0; i < makeGuess.length; i++) // Make a list of blank positions of the current guess.
+        for(int i = makeGuess.length - 1; i >= 0; i--) // Make a list of blank positions of the current guess.
         {
             if(makeGuess[i] == ' ') // if 'blank'.
             {
-                blanks.add(i);
+                blanks.push(i);
             }
         }
 
@@ -200,16 +209,15 @@ public class Game
             for(int i = 0; i < lSortedCopy.size(); i++) // Puts Letter l in the highest weighted blank position. 
             {
                 makeGuess[lSortedCopy.get(i)] = l.getLett();
-                char[] makeGuessTemp = makeGuessRecurseA(toRecurseIn, makeGuess);   // Continue recursing to make a word.
-                if(makeGuessTemp != makeGuess)  // If array returned from recurse is different than array passed to recurse, the recurse returned an acceptable word.
+                if(makeGuessRecurseA(toRecurseIn, makeGuess))
                 {
-                    return makeGuessTemp;   // Return found word as character array.
+                    return true;
                 }
 
-                makeGuess = makeGuessIn;    // If returned array was the same, reset makeGuess and try the next highest weighted blank position.
+                makeGuess = makeGuessIn;    // If returned false, reset makeGuess and try the next highest weighted blank position.
             }
 
-            return makeGuessIn;
+            return false;
         }
         else
         {
@@ -217,14 +225,35 @@ public class Game
         }
     }
 
-    private char[] makeGuessRecurseB(ArrayList<Integer> blanks, char[] makeGuess)
+    private boolean makeGuessRecurseB(Stack<Integer> blanksIn, char[] makeGuessIn)
     {
-        if(!blanks.isEmpty())
+        char[] makeGuess = makeGuessIn;
+        if(!blanksIn.isEmpty())
         {
-            for(Integer n : blanks)
+            int n = blanksIn.pop();
+            for(int p = 0; p < ALPHABET_SIZE; p++)
             {
-
+                char c =  pSorted[n][p].getLett();
+                if(letters.get(c - CHAR_SHIFT).getMaxOcc() > 0)
+                {
+                    makeGuess[n] = c;
+                    if(makeGuessRecurseB(blanksIn, makeGuess))
+                    {
+                        return true;
+                    }
+                }
             }
+
+            blanksIn.push(n);
+            return false;
+        }
+        else if(wordList.contains(new String(makeGuessIn)))
+        {
+            return true;
+        }
+        else
+        {
+            return false; 
         }
     }
 
@@ -268,7 +297,7 @@ public class Game
         {
             String guess = guessHistory.get(guessHistory.size() - 1).getWord(); // Gets the string of the last attempted guess.
             if(guess.equals(answer.getWord())               // Checks the state of the game.
-                || guessHistory.size() >= NUM_ATTEMPTS)
+                || guessHistory.size() >= num_attempts)
             {
                 completed = true;
             }
@@ -547,7 +576,27 @@ public class Game
     {
         return completed;
     }
-    
+  
+    /**
+     * Returns this games current guess.
+     * 
+     * @return  this games current guess.
+     */
+    private char[] getGuess()
+    {
+        return guess;
+    }
+
+    /**
+     * Sets this Game's current guess as passed arguement.
+     * 
+     * @param   guessIn   what guess will be set to.
+     */
+    private void setGuess(char[] guessIn)
+    {
+        guess = guessIn;
+    }
+
     /**
     * Prints positional weight data.
     */
@@ -604,7 +653,11 @@ public class Game
             System.out.println("    " + g.getWord());
             System.out.println("    " + g.getScore());
         }
-        System.out.println("\nNumber of attempts left: " + (NUM_ATTEMPTS - guessHistory.size()));
+    }
+
+    public void printAttemptsLeft()
+    {
+        System.out.println("\nNumber of attempts left: " + (num_attempts - guessHistory.size()));
     }
 
     public void printResultsPlayer()
@@ -618,6 +671,13 @@ public class Game
         {
             System.out.println("Sorry, you lost. The answer was " + answer.getWord());
         }
+    }
+
+    public void printResultsBot()
+    {
+        System.out.println();
+        printGame();
+        System.out.println("It tooke the computer " + guessHistory.size() + " attempts to win.");
     }
 
     /**

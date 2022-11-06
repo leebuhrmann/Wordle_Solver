@@ -55,7 +55,7 @@ public class Driver
 
             if(input.equals("1"))   // Starts a game played by a person (not played by a bot).
             {
-                game = new Game(dictionaryFile, weightedListFile);
+                game = new Game(dictionaryFile, weightedListFile, 6);
                 while(!game.completed())
                 {
                     System.out.print("\nGuess a five letter word: ");
@@ -69,6 +69,7 @@ public class Driver
                     else if(game.gameStep(input)) // Checks input and possibly performs a game step.
                     {
                         game.printGame();
+                        game.printAttemptsLeft();
                     }
                     else
                     {
@@ -80,9 +81,9 @@ public class Driver
             }
             else    // Starts a game played by a bot (not played by the person).
             {
-                game = new Game(dictionaryFile, weightedListFile);
-                // game.botPlays();
-                // game.printResultsBot();
+                game = new Game(dictionaryFile, weightedListFile, "Atlas", 50); // TODO: current has set answer for testing
+                game.botPlays();
+                game.printResultsBot();
             }
         
             while(true) // Ensures proper input.

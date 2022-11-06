@@ -17,7 +17,7 @@ public class GameTests
                 File dictionaryFile = new File("src/Wordle_Dictionary");
                 File weightedListFile = new File("src/Weighted_Wordle_List");
 
-                Game game = new Game(dictionaryFile, weightedListFile, "Stall");
+                Game game = new Game(dictionaryFile, weightedListFile, "Stall", 6);
                 assertTrue(game.gameStep("Stalk"));
         }
 
