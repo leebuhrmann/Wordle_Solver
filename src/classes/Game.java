@@ -2,6 +2,7 @@ package classes;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
@@ -114,148 +115,6 @@ public class Game
         }
     }
 
-    /**
-     * Plays a game where the computer makes its own guesses until it finds the answer.
-     */
-    public void botPlays()
-    {
-        //Random rand = new Random();
-        //char[] makeGuess = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
-        char[] makeGuess = {'S','U','P','E','R'};
-        setGuess(makeGuess);
-        gameStep(new String(getGuess()));
-
-        while(!completed() && makeGuess())
-        {
-            String guessString = new String(getGuess());
-            gameStep(guessString);
-        }
-    }
-
-    /**
-     * stuff
-     * @return
-     */
-    public boolean makeGuess()
-    {
-        char[] makeGuess = getGuess();
-        for(int i = 0; i < makeGuess.length; i++) // Fill new guess with 'blanks'
-        {
-            makeGuess[i] = ' ';
-        }
-        setGuess(makeGuess);
-      
-        ArrayList<Letter> toRecurse = new ArrayList<Letter>();
-
-        for(Letter l : letters)     // Loop through all letters.
-        {
-            ArrayList<Integer> correctPos = l.getCorrect(); // Grab list of all correct positions for that letter.
-
-            if(!correctPos.isEmpty())
-            {
-                for(Integer n : correctPos)             // Assign that letter to all correct positions in the current guess being made.
-                {
-                    makeGuess[n] = l.getLett();
-                }
-            }
-
-            int difference = l.getMinOcc() - correctPos.size();
-            for(int i = 0; i < difference; i++)            
-            {
-                toRecurse.add(l);                              
-            }
-        }
-
-        return makeGuessRecurseA(toRecurse, makeGuess);
-    }
-
-    /**
-     * more stuff
-     * @param toRecurseIn
-     * @param makeGuessIn
-     * @return
-     */
-    private boolean makeGuessRecurseA(ArrayList<Letter> toRecurseIn, char[] makeGuessIn)
-    {
-        Stack<Integer> blanks = new Stack<Integer>();
-        char[] makeGuess = makeGuessIn;
-
-        for(int i = makeGuess.length - 1; i >= 0; i--) // Make a list of blank positions of the current guess.
-        {
-            if(makeGuess[i] == ' ') // if 'blank'.
-            {
-                blanks.push(i);
-            }
-        }
-
-        if(!toRecurseIn.isEmpty())
-        {
-            Letter l = toRecurseIn.get(0);
-            toRecurseIn.remove(0);
-            ArrayList<Integer> lSortedCopy = new ArrayList<Integer>();
-            for(Integer n : l.getSorted())  // Create deep copy of sorted list.
-            {
-                lSortedCopy.add(n);
-            }
-
-            for(int n : blanks) // Creates a sorted list of blanks in order of weight for this letter. 
-            {
-                if(!lSortedCopy.contains(n))
-                {
-                    lSortedCopy.remove((Integer) n); 
-                }
-            }
-
-            for(int i = 0; i < lSortedCopy.size(); i++) // Puts Letter l in the highest weighted blank position. 
-            {
-                makeGuess[lSortedCopy.get(i)] = l.getLett();
-                if(makeGuessRecurseA(toRecurseIn, makeGuess))
-                {
-                    return true;
-                }
-
-                makeGuess = makeGuessIn;    // If returned false, reset makeGuess and try the next highest weighted blank position.
-            }
-
-            return false;
-        }
-        else
-        {
-            return makeGuessRecurseB(blanks, makeGuess);    
-        }
-    }
-
-    private boolean makeGuessRecurseB(Stack<Integer> blanksIn, char[] makeGuessIn)
-    {
-        char[] makeGuess = makeGuessIn;
-        if(!blanksIn.isEmpty())
-        {
-            int n = blanksIn.pop();
-            for(int p = 0; p < ALPHABET_SIZE; p++)
-            {
-                char c =  pSorted[n][p].getLett();
-                if(letters.get(c - CHAR_SHIFT).getMaxOcc() > 0)
-                {
-                    makeGuess[n] = c;
-                    if(makeGuessRecurseB(blanksIn, makeGuess))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            blanksIn.push(n);
-            return false;
-        }
-        else if(wordList.contains(new String(makeGuessIn)))
-        {
-            return true;
-        }
-        else
-        {
-            return false; 
-        }
-    }
 
     /**
      * Attempts to perform a single game step.
@@ -287,6 +146,175 @@ public class Game
         completionState();
         return retFlag;
     }
+
+    /**
+     * Plays a game where the computer makes its own guesses until it finds the answer.
+     */
+    public void botPlays()
+    {
+        Random rand = new Random();
+        char[] makeGuess = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
+        // char[] makeGuess = {'D','E','B','U','G'};
+        setGuess(makeGuess);
+        gameStep(new String(getGuess()));
+
+        while(!completed() && makeGuess())
+        {
+            String guessString = new String(getGuess());
+            gameStep(guessString);
+        }
+    }
+
+    /**
+     * stuff
+     * @return
+     */
+    public boolean makeGuess()
+    {
+        char[] makeGuess = getGuess();
+        for(int i = 0; i < makeGuess.length; i++) // Fill new guess with 'blanks'
+        {
+            makeGuess[i] = ' ';
+        }
+      
+        Stack<Letter> toRecurse = new Stack<Letter>();
+
+        for(Letter l : letters)     // Loop through all letters.
+        {
+            ArrayList<Integer> correctPos = l.getCorrect(); // Grab list of all correct positions for that letter.
+
+            if(!correctPos.isEmpty())
+            {
+                for(Integer n : correctPos)             // Assign that letter to all correct positions in the current guess being made.
+                {
+                    makeGuess[n] = l.getLett();
+                }
+            }
+
+            int difference = l.getMinOcc() - correctPos.size();
+            for(int i = 0; i < difference; i++)            
+            {
+                toRecurse.push(l);                       // Fill a Letters list with letters we know are in the guess but do not know what position they belong to.
+            }
+        }
+
+        return makeGuessRecurseA(toRecurse, makeGuess);
+    }
+
+    /**
+     * more stuff
+     * @param toRecurseIn
+     * @param makeGuessIn
+     * @return
+     */
+    private boolean makeGuessRecurseA(Stack<Letter> toRecurseIn, char[] makeGuessIn)
+    {
+        Stack<Integer> blanks = new Stack<Integer>();
+
+        char[] makeGuess = new char[WORD_LEGNTH];
+        for(int i = 0; i < makeGuessIn.length; i++)    // Make deep copy of makeGuessIn
+        {
+            makeGuess[i] = makeGuessIn[i];
+        }
+
+        for(int i = makeGuess.length - 1; i >= 0; i--) // Make a list of blank positions of the current guess.
+        {
+            if(makeGuess[i] == ' ') // if 'blank'.
+            {
+                blanks.push(i);
+            }
+        }
+
+        if(!toRecurseIn.isEmpty())
+        {
+            Letter l = toRecurseIn.pop();
+            ArrayList<Integer> lSortedCopy = new ArrayList<Integer>();
+            for(Integer n : l.getSorted())  // Create deep copy of sorted list.
+            {
+                lSortedCopy.add(n);
+            }
+
+            Iterator<Integer> itr = lSortedCopy.iterator();
+            while(itr.hasNext())        // Creates a sorted list with only the positions that are also blank on the current guess.
+            {
+                int n = itr.next();
+                if(!blanks.contains(n))
+                {
+                    itr.remove(); 
+                }
+            }
+
+            itr = lSortedCopy.iterator();    // Removes positions that letter has already attempted.
+            while(itr.hasNext())
+            {
+                int n = itr.next();
+                if(!l.getNotAttempted().contains(n))
+                {
+                    itr.remove(); 
+                }
+            }
+
+            for(int i = 0; i < lSortedCopy.size(); i++) // Puts Letter l in the highest weighted position in its list.
+            {
+                makeGuess[lSortedCopy.get(i)] = l.getLett();
+                if(makeGuessRecurseA(toRecurseIn, makeGuess))
+                {
+                    return true;
+                }
+
+                makeGuess[lSortedCopy.get(i)] = ' ';    // Restore previous guess.
+            }
+
+
+            toRecurseIn.push(l);    // Restore list.
+            return false;
+        }
+        else
+        {
+            return makeGuessRecurseB(blanks, makeGuess);    
+        }
+    }
+
+    private boolean makeGuessRecurseB(Stack<Integer> blanksIn, char[] makeGuessIn)
+    {
+        if(!blanksIn.isEmpty())
+        {
+            char[] makeGuess = new char[WORD_LEGNTH];
+            for(int i = 0; i < makeGuessIn.length; i++)    // Make deep copy of makeGuessIn
+            {
+                makeGuess[i] = makeGuessIn[i];
+            }
+
+            int n = blanksIn.pop();
+            for(int p = 0; p < ALPHABET_SIZE; p++)
+            {
+                char c =  pSorted[n][p].getLett();
+                if(letters.get(c - CHAR_SHIFT).getMaxOcc() > 0                      // If this letter is not known to not occure in this guess, continue. (AND)
+                    && letters.get(c - CHAR_SHIFT).getNotAttempted().contains(n))   // If this letter has not been attempted at this position, continue.
+                {
+                    makeGuess[n] = c;
+                    if(makeGuessRecurseB(blanksIn, makeGuess))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            makeGuess[n] = ' ';     // Restore previous guess.
+            blanksIn.push(n);
+            return false;
+        }
+        else if(wordList.contains(new String(makeGuessIn)))
+        {
+            setGuess(makeGuessIn);
+            return true;
+        }
+        else
+        {
+            return false; 
+        }
+    }
+
 
     /**
      * Detects and sets the completion state of this Game.
@@ -677,7 +705,7 @@ public class Game
     {
         System.out.println();
         printGame();
-        System.out.println("It tooke the computer " + guessHistory.size() + " attempts to win.");
+        System.out.println("It took the computer " + guessHistory.size() + " attempts to win.");
     }
 
     /**

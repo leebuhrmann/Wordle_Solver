@@ -81,7 +81,7 @@ public class Driver
             }
             else    // Starts a game played by a bot (not played by the person).
             {
-                game = new Game(dictionaryFile, weightedListFile, "Atlas", 50); // TODO: current has set answer for testing
+                game = new Game(dictionaryFile, weightedListFile, 50);
                 game.botPlays();
                 game.printResultsBot();
             }
