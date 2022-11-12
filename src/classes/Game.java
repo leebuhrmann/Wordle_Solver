@@ -154,7 +154,7 @@ public class Game
     {
         Random rand = new Random();
         char[] makeGuess = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
-        // char[] makeGuess = {'D','E','B','U','G'};
+        // char[] makeGuess = new String("Quest").toCharArray();
         setGuess(makeGuess);
         gameStep(new String(getGuess()));
 
