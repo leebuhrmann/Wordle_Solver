@@ -12,7 +12,10 @@ import classes.Game;
  * Have game on webbrowser.
  * Allow player to chose number of attempts.
  * Allow games with different dictionaries, possibly different word sizes and alphabets.
- * Allow Wordle_Letter_Weigher to pass files directly this app, or have this app call that app.7
+ * Allow Wordle_Letter_Weigher to pass files directly to this app, or have this app call that app.
+ * Have computer play todays word.
+ * Have player play todays word.
+ * Let player give computer its first guess.
  */
 
 public class Driver 
