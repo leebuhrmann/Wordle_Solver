@@ -70,7 +70,7 @@ public class Game
     }
 
     /**
-     * Creates a game with a random answer.
+     * Creates a game with a specified answer.
      * 
      * @param   dictionaryIn    The File containing all the playable words of this game.
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
@@ -154,7 +154,6 @@ public class Game
     {
         Random rand = new Random();
         char[] makeGuess = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
-        // char[] makeGuess = new String("Quest").toCharArray();
         setGuess(makeGuess);
         gameStep(new String(getGuess()));
 
