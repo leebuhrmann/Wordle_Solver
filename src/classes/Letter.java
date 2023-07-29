@@ -6,7 +6,7 @@ public class Letter {
     private static final int WORD_SIZE = 5;
 
     private int minOcc;
-    private int maxOcc;         //if 0, this letter is not in the Game's answer.
+    private int maxOcc;         // if 0, this letter is not in the Game's answer.
     private char lett;
     private ArrayList<Integer> correctPosition;
     private ArrayList<Integer> notAttemptedPositions;

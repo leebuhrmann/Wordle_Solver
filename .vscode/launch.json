@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Driver",
+            "request": "launch",
+            "mainClass": "application.Driver",
+            "projectName": "Wordle_Solver_b17c8fe5"
+        },
+        {
+            "type": "java",
             "name": "Launch Driver",
             "request": "launch",
             "mainClass": "application.Driver",

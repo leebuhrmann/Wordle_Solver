@@ -161,7 +161,8 @@ public class Driver
      * menu options are "1" and "2".
      * 
      * @param   inputIn User input.
-     * @return  {@code true} if input was valid, {@code false} otherwise.
+     * @return  {@code true} if input was valid, 
+     *          {@code false} otherwise.
      */
     public static boolean checkMenuSelection(String inputIn)
     {

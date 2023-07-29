@@ -29,8 +29,7 @@ public class Word {
 
     /**
      * Creates a Word to be used in a Game. This Word knows the number of occurrences of
-     * each letter of the alphabet within itself. It also stores a possible score of that
-     * word against a Game's answer.
+     * each letter of the alphabet within itself.
      * 
      * @param   wordIn A word.
      */
