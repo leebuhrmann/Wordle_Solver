@@ -22,7 +22,7 @@ public class Game
      */
     private static final int CHAR_SHIFT = 65;
     private static final int ALPHABET_SIZE = 26;
-    private static final int WORD_LEGNTH = 5;
+    private static final int WORD_LENGTH = 5;
 
 
     // ############# Files Data #############
@@ -92,13 +92,13 @@ public class Game
     {
         num_attempts = numAttemptsIn;
         guessHistory = new ArrayList<Word>();
-        pWeights = new int[WORD_LEGNTH][ALPHABET_SIZE];
-        pSorted = new Letter[WORD_LEGNTH][ALPHABET_SIZE];
-        pSortedWeights = new int[WORD_LEGNTH][ALPHABET_SIZE];
+        pWeights = new int[WORD_LENGTH][ALPHABET_SIZE];
+        pSorted = new Letter[WORD_LENGTH][ALPHABET_SIZE];
+        pSortedWeights = new int[WORD_LENGTH][ALPHABET_SIZE];
         wordList = new ArrayList<String>();
         letters = new ArrayList<Letter>();
         completed = false;
-        guess = new char[WORD_LEGNTH];
+        guess = new char[WORD_LENGTH];
 
         try
         {
@@ -133,7 +133,7 @@ public class Game
     {
         guessIn = guessIn.toUpperCase();
         boolean retFlag = false;
-        if(guessIn.length() == WORD_LEGNTH  // Check to see if passed word was valid.
+        if(guessIn.length() == WORD_LENGTH  // Check to see if passed word was valid.
             && wordList.contains(guessIn))
         {
             Word guess = new Word(guessIn);
@@ -221,7 +221,7 @@ public class Game
     {
         Stack<Integer> blanks = new Stack<Integer>();
 
-        char[] newGuess = new char[WORD_LEGNTH];
+        char[] newGuess = new char[WORD_LENGTH];
         for(int i = 0; i < newGuessIn.length; i++)    // Make deep copy of newGuessIn
         {
             newGuess[i] = newGuessIn[i];
@@ -296,7 +296,7 @@ public class Game
     {
         if(!blanksIn.isEmpty())
         {
-            char[] newGuess = new char[WORD_LEGNTH];
+            char[] newGuess = new char[WORD_LENGTH];
             for(int i = 0; i < newGuessIn.length; i++)    // Make deep copy of newGuessIn
             {
                 newGuess[i] = newGuessIn[i];
@@ -364,11 +364,11 @@ public class Game
          * Checks to see if a character is in the correct position and marks if it has 
          * been attempted in its coresponding Letter.
          */
-        for(int i = 0; i < WORD_LEGNTH; i++)      // Loops through characters in guessIn.
+        for(int i = 0; i < WORD_LENGTH; i++)      // Loops through characters in guessIn.
         {  
             Letter letter = letters.get(guessChArr[i] - CHAR_SHIFT);    // Grabs the current guess characters corresponding Letter.
 
-            for(int j = 0; j < WORD_LEGNTH; j++)  // Loops through characters in the answer.
+            for(int j = 0; j < WORD_LENGTH; j++)  // Loops through characters in the answer.
             {
                 if(guessChArr[i] == answerChArr[j])
                 {         
@@ -425,14 +425,14 @@ public class Game
         char[] guessChArr = guessIn.getWordArr();
         char[] answerChArr = answer.getWordArr();
         int[] lettCounter = new int[ALPHABET_SIZE];
-        char[] score = new char[WORD_LEGNTH];
+        char[] score = new char[WORD_LENGTH];
 
         /*
          * Scores all correct characters in correct positions
          */
-        for(int i = 0; i < WORD_LEGNTH; i++)      // Loops through characters in guessIn.
+        for(int i = 0; i < WORD_LENGTH; i++)      // Loops through characters in guessIn.
         {  
-            for(int j = 0; j < WORD_LEGNTH; j++)  // Loops through characters in the answer.
+            for(int j = 0; j < WORD_LENGTH; j++)  // Loops through characters in the answer.
             {
                 char gc = guessChArr[i];
                 char ac = answerChArr[j];
@@ -447,11 +447,11 @@ public class Game
         /*
          * Scores all remaining characters.
          */
-        for(int i = 0; i < WORD_LEGNTH; i++)      // Loops through characters in guessIn.
+        for(int i = 0; i < WORD_LENGTH; i++)      // Loops through characters in guessIn.
         {  
             if(score[i] != 'Y') // Skips this character if it has already been scored as correct.
             {
-                for(int j = 0; j < WORD_LEGNTH; j++)  // Loops through characters in the answer.
+                for(int j = 0; j < WORD_LENGTH; j++)  // Loops through characters in the answer.
                 {
                     char gc = guessChArr[i];
                     char ac = answerChArr[j];
@@ -513,7 +513,7 @@ public class Game
             Scanner lineParser = new Scanner(record);
             lineParser.useDelimiter(",");
             
-            for(int j = 0; j < WORD_LEGNTH; j++)
+            for(int j = 0; j < WORD_LENGTH; j++)
             {
                 pWeights[j][n] = lineParser.nextInt();
                 pSortedWeights[j][n] = pWeights[j][n];
@@ -532,8 +532,8 @@ public class Game
     {
         for(int i = 0; i < ALPHABET_SIZE; i++)
         {
-            int[] weightsOut = new int[WORD_LEGNTH];
-            for(int j = 0; j < WORD_LEGNTH; j++)
+            int[] weightsOut = new int[WORD_LENGTH];
+            for(int j = 0; j < WORD_LENGTH; j++)
             {
                 weightsOut[j] = pWeights[j][i];
             }
@@ -550,7 +550,7 @@ public class Game
          /*
          * Fills pSorted with letters in each position in alphabetical order.
          */
-        for(int i = 0; i < WORD_LEGNTH; i++)
+        for(int i = 0; i < WORD_LENGTH; i++)
         {
             for(int j = 0; j < ALPHABET_SIZE; j++)
             {
@@ -561,7 +561,7 @@ public class Game
         /*
          * Sorts every position by most common letter to least common letter.
          */
-        for(int i = 0; i < WORD_LEGNTH; i++)
+        for(int i = 0; i < WORD_LENGTH; i++)
         {
             int a = ALPHABET_SIZE;
             for (int j = 0; j < a - 1; j++)
@@ -651,7 +651,7 @@ public class Game
         for(int i = 0; i < ALPHABET_SIZE; i++)
         {
             System.out.printf(" %c |", (i + CHAR_SHIFT));
-            for(int j = 0; j < WORD_LEGNTH; j++)
+            for(int j = 0; j < WORD_LENGTH; j++)
             {
                 System.out.printf(" %3d |", pWeights[j][i]);
             }
@@ -662,7 +662,7 @@ public class Game
         for(int i = 0; i < ALPHABET_SIZE; i++)
         {
             System.out.printf(" * |");
-            for(int j = 0; j < WORD_LEGNTH; j++)
+            for(int j = 0; j < WORD_LENGTH; j++)
             {
                 System.out.printf(" %c |", pSorted[j][i].getLett());
             }
