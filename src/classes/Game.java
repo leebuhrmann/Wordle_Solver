@@ -1,6 +1,7 @@
 package classes;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -61,7 +62,7 @@ public class Game
      * @param   dictionaryIn    The File containing all the playable words of this game.
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      */
-    public Game(File dictionaryIn, File weightedListFileIn, int numAttemptsIn) 
+    public Game(String dictionaryIn, String weightedListFileIn, int numAttemptsIn) 
     {
         constructorHelper(dictionaryIn, weightedListFileIn, numAttemptsIn);
         Random rand = new Random(); // Create a random answer for this Game.
@@ -76,7 +77,7 @@ public class Game
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      * @param   answerIn    The word to be set as the answer for this Game.
      */
-    public Game(File dictionaryIn, File weightedListFileIn, String answerIn, int numAttemptsIn)
+    public Game(String dictionaryIn, String weightedListFileIn, String answerIn, int numAttemptsIn)
     {
         constructorHelper(dictionaryIn, weightedListFileIn, numAttemptsIn);
         answer = new Word(answerIn); // Create specified answer for this Game.
@@ -88,7 +89,7 @@ public class Game
      * @param   dictionaryIn    The File containing all the playable words of this game.
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      */
-    private void constructorHelper(File dictionaryIn, File weightedListFileIn, int numAttemptsIn)
+    private void constructorHelper(String dictionaryIn, String weightedListFileIn, int numAttemptsIn)
     {
         num_attempts = numAttemptsIn;
         guessHistory = new ArrayList<Word>();
@@ -107,10 +108,9 @@ public class Game
             processWeightData();
             collectDictionaryWords(dictionaryIn);
         }
-        catch(FileNotFoundException fnfe)
+        catch(RuntimeException re)
         {
-            System.out.println("File was not found!");
-            fnfe.printStackTrace();
+            re.printStackTrace();
             System.exit(1);
         }
     }
@@ -502,10 +502,15 @@ public class Game
     * @param    weightedListFileIn  the File to be processed.
     * @throws   FileNotFoundException
     */
-    private void collectWeightData(File weightedListFileIn) throws FileNotFoundException
+    private void collectWeightData(String weightedListFileIn) throws RuntimeException
     {
         int n = 0;
-        Scanner in = new Scanner(weightedListFileIn);
+        InputStream is = getClass().getResourceAsStream(weightedListFileIn);
+        if (is == null)
+        {
+            throw new RuntimeException("Cannot find " + weightedListFileIn + " in classpath");
+        }
+        Scanner in = new Scanner(is);
         
         while(in.hasNextLine() && n < ALPHABET_SIZE)
         {
@@ -590,9 +595,14 @@ public class Game
     * @param    dictionaryIn    the File to be collected.
     * @throws   FileNotFoundException
     */
-    private void collectDictionaryWords(File dictionaryIn) throws FileNotFoundException
+    private void collectDictionaryWords(String dictionaryIn) throws RuntimeException
     {
-        Scanner in = new Scanner(dictionaryIn);
+        InputStream is = getClass().getResourceAsStream(dictionaryIn);
+        if (is == null)
+        {
+            throw new RuntimeException("Cannot find " + dictionaryIn + " in classpath");
+        }
+        Scanner in = new Scanner(is);
         in.nextLine(); // Skip first line.
         while(in.hasNextLine())
         {
