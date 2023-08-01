@@ -14,8 +14,8 @@ public class GameTests
         @Test
         public void StalkStall()
         {
-                File dictionaryFile = new File("src/Wordle_Dictionary");
-                File weightedListFile = new File("src/Weighted_Wordle_List");
+                String dictionaryFile = "/Wordle_Dictionary";
+                String weightedListFile = "/Weighted_Wordle_List";
 
                 Game game = new Game(dictionaryFile, weightedListFile, "Stall", 6);
                 assertTrue(game.gameStep("Stalk"));

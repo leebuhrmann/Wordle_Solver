@@ -1,6 +1,5 @@
 package application;
 
-import java.io.File;
 import java.util.Scanner;
 
 import classes.Game;
