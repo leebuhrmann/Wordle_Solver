@@ -1,1 +1,1 @@
-Solves wordle. It works.
+Solves wordle.
