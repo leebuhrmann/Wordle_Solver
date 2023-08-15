@@ -16,7 +16,7 @@ If a letter is said to **exist**, this is shorthand for saying that this letter 
 
 Once a day, Wordle has a secret five-letter word (the **solution**) that must be guessed to win the game, and a player only gets six guesses for that day's solution. When a player makes a guess, Wordle will inform them if the letter does *exist in the solution*, and if it does exist it will inform them if it was *in the correct position*. A **correct** letter is a letter that exists and is in the correct position; it is highlighted green. A **missed** letter is a letter that exists but is in the incorrect position; it is highlighted yellow. An **incorrect** letter is a letter that was guessed, but does not exist in the solution at any position; it is highlighted grey.
 
-![[Pasted image 20230815110512.png]]
+![image](https://github.com/leebuhrmann/Wordle_Solver/assets/61166759/9f1f7eec-eb99-47a0-9d0d-3591e93c0f8c)
 *An example of a game of Wordle; solved in five guesses.*
 # WEIGHTED LETTER PROBABILITY
 
