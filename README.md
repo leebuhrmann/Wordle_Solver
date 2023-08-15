@@ -52,18 +52,18 @@ With this dictionary, these letters would have these **positional weights**:
 
 But how does the program make guesses on its own? Below will describe how Wordle_Solver will make its guess with correct letters and missed letters. It will also go over how it determines what it will guess for the blank positions that remain. It does this with a recursive and layered algorithm as described below.
 
-## Entering the Algorithm
+### Entering the Algorithm
 
 Before constructing a guess the program first gathers what is knows in two lists of data, the *correct letters list* and the *missed letters list*. The program also knows in what position each letter has been guessed,  if those positions were correct or incorrect, and the positional weights of every letter.
-## Correct Letters Layer
+### Correct Letters Layer
 
 This is the first stop when creating a guess. Simply place all the letters from the correct letters list in their correct positions for the current guess then pass that guess to the Missed Letters Layer.
 
-## Missed Letters Layer
+### Missed Letters Layer
 
 Takes in the guess passed by the Correct Letter Layer and picks a single letter from the missed letters list. Find the highest weighted position for that picked letter and place it there if that letter has not yet been attempted in that position. Once an allowable position has been found for the letter, recurs into Missed Letters Layer until all letters in the missed letters list have been placed. Once all letters from the missed letters list have been placed, pass the currently constructed guess to Blanks and Guessing Layer.
 
-## Blanks and Guessing Layer
+### Blanks and Guessing Layer
 
 Takes in the guess passed by Missed Letters Layer and creates a list of positions that are still blank called *blanks list*. From left to right, fills in the blanks positions with the letter that is most likely to occur in that position and then checks to see if it constructed a real word. If the word was real it submits it as an acceptable guess to the game.
 
