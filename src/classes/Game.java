@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
@@ -29,9 +31,13 @@ public class Game
     // ############# Files Data #############
 
      /*
-      * Contains every word in the passed dictionary File.
+      * Contains every word in the passed dictionary reference in a HashSet.
       */
-    private ArrayList<String> wordList;
+    private HashSet<String> wordListHS;
+    /*
+     * Contains every word in the passed dictionary reference in an ArrayList.
+     */
+    private ArrayList<String> wordListAL;
     /*
      * Contains a weighted value for each character of the alphabet. The value represents the
      * number of times that character as found in that position of all the words in the dictionary.
@@ -66,7 +72,7 @@ public class Game
     {
         constructorHelper(dictionaryIn, weightedListFileIn, numAttemptsIn);
         Random rand = new Random(); // Create a random answer for this Game.
-        String answerStr = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE + 1));
+        String answerStr = wordListAL.get(rand.nextInt(CORRECT_WORD_LIST_SIZE + 1));
         answer = new Word(answerStr);
     }
 
@@ -96,7 +102,8 @@ public class Game
         pWeights = new int[WORD_LENGTH][ALPHABET_SIZE];
         pSorted = new Letter[WORD_LENGTH][ALPHABET_SIZE];
         pSortedWeights = new int[WORD_LENGTH][ALPHABET_SIZE];
-        wordList = new ArrayList<String>();
+        wordListHS = new HashSet<String>();
+        wordListAL = new ArrayList<String>();
         letters = new ArrayList<Letter>();
         completed = false;
         guess = new char[WORD_LENGTH];
@@ -134,7 +141,7 @@ public class Game
         guessIn = guessIn.toUpperCase();
         boolean retFlag = false;
         if(guessIn.length() == WORD_LENGTH  // Check to see if passed word was valid.
-            && wordList.contains(guessIn))
+            && wordListHS.contains(guessIn))
         {
             Word guess = new Word(guessIn);
             guess.setScore(score(guess));
@@ -154,7 +161,7 @@ public class Game
     public void botPlays()
     {
         Random rand = new Random();
-        char[] newGuess = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
+        char[] newGuess = wordListAL.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
         setGuess(newGuess);
         gameStep(new String(getGuess()));
 
@@ -341,7 +348,7 @@ public class Game
             blanksIn.push(n);
             return false;
         }
-        else if(wordList.contains(new String(newGuessIn)))
+        else if(wordListHS.contains(new String(newGuessIn)))
         {
             setGuess(newGuessIn);
             return true;
@@ -633,7 +640,8 @@ public class Game
             lineParser.nextInt();               // Skip word number.
             String word = lineParser.next();    // Grab word.
             word = word.toUpperCase();
-            wordList.add(word);
+            wordListAL.add(word);
+            wordListHS.add(word);
 
             lineParser.close();
         }
@@ -708,7 +716,7 @@ public class Game
     public void printDictionary()
     {
         int num = 0;
-        for(String word : wordList)
+        for(String word : wordListHS)
         {
             System.out.println(num + " | " + word);
             num++;

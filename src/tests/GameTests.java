@@ -12,8 +12,11 @@ public class GameTests
          * The Bot Game creates a guess and then searches through Wordle_Dictionary to see if the
          * created guess was a real word.
          * 
-         * The average time for a brute force method with a O(n) is a little more than 700,000,000ns
+         * The average time for a brute force method with a O(n) is a little more than 700,000,000ns.
+         * The average time for direct lookup (HashSet method) with O(1) is a little more than 6,000,000ns
+         * which is an improvement by a factor of 100.
          */
+        @Test
         public void BotTimePerformance()
         {
                 String dictionaryFile = "/Wordle_Dictionary.txt";
