@@ -235,7 +235,7 @@ public class Game
      * @param toRecurseIn a list of letters that are known to occure in the 
      * answer and have yet to be placed.
      * @param newGuessIn the currently constructed guess.
-     * @return
+     * @return 
      */
     private boolean makeGuessRecurseA(Stack<Letter> toRecurseIn, char[] newGuessIn)
     {
@@ -310,7 +310,7 @@ public class Game
      * 
      * @param blanksIn A list of position in the newGuess that are currently blank.
      * @param newGuessIn The currently constructed guess.
-     * @return
+     * @return 
      */
     private boolean makeGuessRecurseB(Stack<Integer> blanksIn, char[] newGuessIn)
     {
@@ -438,7 +438,7 @@ public class Game
      * 
      * @param   guessIn The word to be scored against this Game's answer.
      * 
-     * @return  The score of guessIn.
+     * @return  String - The score of guessIn.
      */
     private String score(Word guessIn)
     {
