@@ -1,9 +1,7 @@
 package classes;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
@@ -28,14 +26,16 @@ public class Game
     private static final int WORD_LENGTH = 5;
 
 
-    // ############# Files Data #############
+    // ############# Resource Data #############
 
      /*
-      * Contains every word in the passed dictionary reference in a HashSet.
+      * Contains every word in the passed dictionary reference in a HashSet. Used for 
+      * searching for a specific word quickly.
       */
     private HashSet<String> wordListHS;
     /*
-     * Contains every word in the passed dictionary reference in an ArrayList.
+     * Contains every word in the passed dictionary reference in an ArrayList. Used for
+     * searching for a word by index quickly.
      */
     private ArrayList<String> wordListAL;
     /*
