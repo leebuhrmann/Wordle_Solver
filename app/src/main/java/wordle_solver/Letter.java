@@ -1,4 +1,4 @@
-package classes;
+package wordle_solver;
 import java.util.ArrayList;
 
 public class Letter {

@@ -1,4 +1,4 @@
-package classes;
+package wordle_solver;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class Game
      * This value is the number of words at the beggining of the dictionary that can be answers.
      * The rest of the words can be accepted, but are not answers.
      */
-    private static final int CORRECT_WORD_LIST_SIZE = 2314;
+    
     /*
      * Used to shift a character on the ANSII table into a int representing its number in the alphabet
      * and vice a versa.

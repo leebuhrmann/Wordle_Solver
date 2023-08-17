@@ -1,8 +1,8 @@
-package application;
+package wordle_solver;
 
 import java.util.Scanner;
 
-import classes.Game;
+
 
 /*
  * IDEAS:
@@ -22,8 +22,8 @@ public class Driver
     static final Scanner in = new Scanner(System.in);
     public static void main(String[] args)
     {
-        String dictionaryFile = "/Wordle_Dictionary.txt";
-        String weightedListFile = "/Weighted_Wordle_List.txt";
+        String dictionaryFile = "Wordle_Dictionary.txt";
+        String weightedListFile = "Weighted_Wordle_List.txt";
 
         String input = "-";
 

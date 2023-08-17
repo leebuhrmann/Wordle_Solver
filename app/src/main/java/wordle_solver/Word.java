@@ -1,4 +1,4 @@
-package classes;
+package wordle_solver;
 
 
 public class Word {

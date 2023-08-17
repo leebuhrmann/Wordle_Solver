@@ -2,9 +2,14 @@
     "java.test.config": [
         {
             "java.project.sourcePaths": ["src"],
-            "java.project.outputPath": "bin",
-            "java.project.referencedLibraries": [
-            "lib/**/*.jar"],
+            "java.project.outputPath": "bin"
         }
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "disabled",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "build/libs/**/*.jar"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
 }
+
