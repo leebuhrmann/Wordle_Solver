@@ -1,7 +1,8 @@
 package classes;
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
@@ -25,12 +26,18 @@ public class Game
     private static final int WORD_LENGTH = 5;
 
 
-    // ############# Files Data #############
+    // ############# Resource Data #############
 
      /*
-      * Contains every word in the passed dictionary File.
+      * Contains every word in the passed dictionary reference in a HashSet. Used for 
+      * searching for a specific word quickly.
       */
-    private ArrayList<String> wordList;
+    private HashSet<String> wordListHS;
+    /*
+     * Contains every word in the passed dictionary reference in an ArrayList. Used for
+     * searching for a word by index quickly.
+     */
+    private ArrayList<String> wordListAL;
     /*
      * Contains a weighted value for each character of the alphabet. The value represents the
      * number of times that character as found in that position of all the words in the dictionary.
@@ -61,11 +68,11 @@ public class Game
      * @param   dictionaryIn    The File containing all the playable words of this game.
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      */
-    public Game(File dictionaryIn, File weightedListFileIn, int numAttemptsIn) 
+    public Game(String dictionaryIn, String weightedListFileIn, int numAttemptsIn) 
     {
         constructorHelper(dictionaryIn, weightedListFileIn, numAttemptsIn);
         Random rand = new Random(); // Create a random answer for this Game.
-        String answerStr = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE + 1));
+        String answerStr = wordListAL.get(rand.nextInt(CORRECT_WORD_LIST_SIZE + 1));
         answer = new Word(answerStr);
     }
 
@@ -76,7 +83,7 @@ public class Game
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      * @param   answerIn    The word to be set as the answer for this Game.
      */
-    public Game(File dictionaryIn, File weightedListFileIn, String answerIn, int numAttemptsIn)
+    public Game(String dictionaryIn, String weightedListFileIn, String answerIn, int numAttemptsIn)
     {
         constructorHelper(dictionaryIn, weightedListFileIn, numAttemptsIn);
         answer = new Word(answerIn); // Create specified answer for this Game.
@@ -88,14 +95,15 @@ public class Game
      * @param   dictionaryIn    The File containing all the playable words of this game.
      * @param   weightedListFileIn  The File containing all the weighted letter data derived from the dictionary.
      */
-    private void constructorHelper(File dictionaryIn, File weightedListFileIn, int numAttemptsIn)
+    private void constructorHelper(String dictionaryIn, String weightedListFileIn, int numAttemptsIn)
     {
         num_attempts = numAttemptsIn;
         guessHistory = new ArrayList<Word>();
         pWeights = new int[WORD_LENGTH][ALPHABET_SIZE];
         pSorted = new Letter[WORD_LENGTH][ALPHABET_SIZE];
         pSortedWeights = new int[WORD_LENGTH][ALPHABET_SIZE];
-        wordList = new ArrayList<String>();
+        wordListHS = new HashSet<String>();
+        wordListAL = new ArrayList<String>();
         letters = new ArrayList<Letter>();
         completed = false;
         guess = new char[WORD_LENGTH];
@@ -107,10 +115,9 @@ public class Game
             processWeightData();
             collectDictionaryWords(dictionaryIn);
         }
-        catch(FileNotFoundException fnfe)
+        catch(RuntimeException re)
         {
-            System.out.println("File was not found!");
-            fnfe.printStackTrace();
+            re.printStackTrace();
             System.exit(1);
         }
     }
@@ -134,7 +141,7 @@ public class Game
         guessIn = guessIn.toUpperCase();
         boolean retFlag = false;
         if(guessIn.length() == WORD_LENGTH  // Check to see if passed word was valid.
-            && wordList.contains(guessIn))
+            && wordListHS.contains(guessIn))
         {
             Word guess = new Word(guessIn);
             guess.setScore(score(guess));
@@ -149,11 +156,31 @@ public class Game
 
     /**
      * Plays a game where the computer makes its own guesses until it finds the answer.
+     * Uses a random first guess.
      */
     public void botPlays()
     {
         Random rand = new Random();
-        char[] newGuess = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
+        char[] newGuess = wordListAL.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
+        setGuess(newGuess);
+        gameStep(new String(getGuess()));
+
+        while(!completed() && makeGuess())
+        {
+            String guessString = new String(getGuess());
+            gameStep(guessString);
+        }
+    }
+
+    /**
+     * Plays a game where the computer makes its own guesses until it finds the answer.
+     * This version is for testing purposes.
+     * 
+     * @param firstGuess - The first guess the bot will play.
+     */
+    public void botPlays(String firstGuess)
+    {
+        char[] newGuess = firstGuess.toCharArray();
         setGuess(newGuess);
         gameStep(new String(getGuess()));
 
@@ -215,7 +242,7 @@ public class Game
      * @param toRecurseIn a list of letters that are known to occure in the 
      * answer and have yet to be placed.
      * @param newGuessIn the currently constructed guess.
-     * @return
+     * @return 
      */
     private boolean makeGuessRecurseA(Stack<Letter> toRecurseIn, char[] newGuessIn)
     {
@@ -290,7 +317,7 @@ public class Game
      * 
      * @param blanksIn A list of position in the newGuess that are currently blank.
      * @param newGuessIn The currently constructed guess.
-     * @return
+     * @return 
      */
     private boolean makeGuessRecurseB(Stack<Integer> blanksIn, char[] newGuessIn)
     {
@@ -321,7 +348,7 @@ public class Game
             blanksIn.push(n);
             return false;
         }
-        else if(wordList.contains(new String(newGuessIn)))
+        else if(wordListHS.contains(new String(newGuessIn)))
         {
             setGuess(newGuessIn);
             return true;
@@ -418,7 +445,7 @@ public class Game
      * 
      * @param   guessIn The word to be scored against this Game's answer.
      * 
-     * @return  The score of guessIn.
+     * @return  String - The score of guessIn.
      */
     private String score(Word guessIn)
     {
@@ -502,10 +529,15 @@ public class Game
     * @param    weightedListFileIn  the File to be processed.
     * @throws   FileNotFoundException
     */
-    private void collectWeightData(File weightedListFileIn) throws FileNotFoundException
+    private void collectWeightData(String weightedListFileIn) throws RuntimeException
     {
         int n = 0;
-        Scanner in = new Scanner(weightedListFileIn);
+        InputStream is = getClass().getResourceAsStream(weightedListFileIn);
+        if (is == null)
+        {
+            throw new RuntimeException("Cannot find " + weightedListFileIn + " in classpath");
+        }
+        Scanner in = new Scanner(is);
         
         while(in.hasNextLine() && n < ALPHABET_SIZE)
         {
@@ -590,9 +622,14 @@ public class Game
     * @param    dictionaryIn    the File to be collected.
     * @throws   FileNotFoundException
     */
-    private void collectDictionaryWords(File dictionaryIn) throws FileNotFoundException
+    private void collectDictionaryWords(String dictionaryIn) throws RuntimeException
     {
-        Scanner in = new Scanner(dictionaryIn);
+        InputStream is = getClass().getResourceAsStream(dictionaryIn);
+        if (is == null)
+        {
+            throw new RuntimeException("Cannot find " + dictionaryIn + " in classpath");
+        }
+        Scanner in = new Scanner(is);
         in.nextLine(); // Skip first line.
         while(in.hasNextLine())
         {
@@ -603,7 +640,8 @@ public class Game
             lineParser.nextInt();               // Skip word number.
             String word = lineParser.next();    // Grab word.
             word = word.toUpperCase();
-            wordList.add(word);
+            wordListAL.add(word);
+            wordListHS.add(word);
 
             lineParser.close();
         }
@@ -678,7 +716,7 @@ public class Game
     public void printDictionary()
     {
         int num = 0;
-        for(String word : wordList)
+        for(String word : wordListHS)
         {
             System.out.println(num + " | " + word);
             num++;

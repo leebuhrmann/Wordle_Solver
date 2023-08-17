@@ -2,38 +2,90 @@ package tests;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import classes.*;
 
-import java.io.File;
-
-import classes.Game;
-
-//TODO: Check https://stackoverflow.com/questions/74201115/filenotfoundexception-during-junit-tests-but-not-when-running-the-actual-app
 public class GameTests
 {
 
+        /*
+         * The Bot Game creates a guess and then searches through Wordle_Dictionary to see if the
+         * created guess was a real word.
+         * 
+         * The average time for a brute force method with a O(n) is a little more than 700,000,000ns.
+         * The average time for direct lookup (HashSet method) with O(1) is a little more than 6,000,000ns
+         * which is an improvement by a factor of 100.
+         */
         @Test
-        public void StalkStall()
+        public void BotTimePerformance()
         {
-                File dictionaryFile = new File("src/Wordle_Dictionary");
-                File weightedListFile = new File("src/Weighted_Wordle_List");
+                String dictionaryFile = "/Wordle_Dictionary.txt";
+                String weightedListFile = "/Weighted_Wordle_List.txt";
 
-                Game game = new Game(dictionaryFile, weightedListFile, "Stall", 6);
-                assertTrue(game.gameStep("Stalk"));
+                Game game1 = new Game(dictionaryFile, weightedListFile, "Stall", 50);
+                Game game2 = new Game(dictionaryFile, weightedListFile, "Ghast", 50);
+                Game game3 = new Game(dictionaryFile, weightedListFile, "Feast", 50);
+                Game game4 = new Game(dictionaryFile, weightedListFile, "Index", 50);
+                Game game5 = new Game(dictionaryFile, weightedListFile, "Plant", 50);
+                Game game6 = new Game(dictionaryFile, weightedListFile, "Extra", 50);
+                Game game7 = new Game(dictionaryFile, weightedListFile, "Brake", 50);
+                Game game8 = new Game(dictionaryFile, weightedListFile, "Rigor", 50);
+                Game game9 = new Game(dictionaryFile, weightedListFile, "Water", 50);
+                Game game10 = new Game(dictionaryFile, weightedListFile, "Quilt", 50);
+                Game game11 = new Game(dictionaryFile, weightedListFile, "Track", 50);
+                Game game12 = new Game(dictionaryFile, weightedListFile, "Liked", 50);
+                Game game13 = new Game(dictionaryFile, weightedListFile, "Ether", 50);
+                Game game14 = new Game(dictionaryFile, weightedListFile, "Usher", 50);
+                Game game15 = new Game(dictionaryFile, weightedListFile, "Frank", 50);
+                Game game16 = new Game(dictionaryFile, weightedListFile, "Knife", 50);
+                Game game17 = new Game(dictionaryFile, weightedListFile, "Otter", 50);
+                Game game18 = new Game(dictionaryFile, weightedListFile, "Arbor", 50);
+                Game game19 = new Game(dictionaryFile, weightedListFile, "Goose", 50);
+                Game game20 = new Game(dictionaryFile, weightedListFile, "Words", 50);
+
+                long start = System.nanoTime();                
+                game1.botPlays("Stalk");           
+                game2.botPlays("Still");   
+                game3.botPlays("Vivid");
+                game4.botPlays("Comma");
+                game5.botPlays("Trade");
+                game6.botPlays("Blank");
+                game7.botPlays("Later");
+                game8.botPlays("Named");
+                game9.botPlays("House");
+                game10.botPlays("Young");
+                game11.botPlays("Crash");
+                game12.botPlays("Blast");
+                game13.botPlays("Haste");
+                game14.botPlays("Light");
+                game15.botPlays("Mommy");
+                game16.botPlays("Rivet");
+                game17.botPlays("Jolly");
+                game18.botPlays("Shout");
+                game19.botPlays("Apple");
+                game20.botPlays("Walks");
+                long finish = System.nanoTime();
+
+                long timeElapsed = finish - start;
+                System.out.printf("Time Elapsed for this Bot Game: %,dns", timeElapsed);
+                System.out.printf("\nTime Elapsed for this Bot Game: %2.6fms", ((double)timeElapsed / 1000000));
         }
 
         // @Test
-        // public void StalkStall()
+        // public void StalkStall() throws Exception
         // {
         //         System.out.println("***" + System.getProperty("user.dir"));
                 
-        //         File dictionary = new File("ProjectRoot/src/Wordle_Dictionary.txt");
-        //         File weightedListFile = new File("ProjectRoot/src/Weighted_Wordle_List.txt");
+        //         String dictionary = "/Wordle_Dictionary.txt";
+        //         String weightedListFile = "/Weighted_Wordle_List.txt";
         //         ArrayList<Integer> correct;
         //         ArrayList<Integer> notAttempted;
         //         Letter letter;
 
-        //         Game g1 = new Game(dictionary, weightedListFile, "Stall");
-        //         g1.score("Stalk");
+        //         Word guess = new Word("Stalk");
+        //         Game g1 = new Game(dictionary, weightedListFile, "Stall", 50);
+        //         Method privateScore = g1.class.getDeclaredMethod("score", null);
+        //         g1.score(guess);
 
         //         /*
         //          * Testing Letter object 'S'
@@ -340,8 +392,8 @@ public class GameTests
         // @Test
         // public void AbcbdDbcbe()
         // {
-        //         File dictionary = new File("src/Wordle_Dictionary.txt");
-        //         File weightedListFile = new File("src/Weighted_Wordle_List.txt");
+        //         String dictionary = "src/Wordle_Dictionary.txt";
+        //         String weightedListFile = "src/Weighted_Wordle_List.txt";
         //         ArrayList<Integer> correct;
         //         ArrayList<Integer> notAttempted;
         //         Letter letter;

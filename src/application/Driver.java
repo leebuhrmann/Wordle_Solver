@@ -1,6 +1,5 @@
 package application;
 
-import java.io.File;
 import java.util.Scanner;
 
 import classes.Game;
@@ -23,37 +22,20 @@ public class Driver
     static final Scanner in = new Scanner(System.in);
     public static void main(String[] args)
     {
-        File dictionaryFile = new File("src/Wordle_Dictionary.txt");
-        File weightedListFile = new File("src/Weighted_Wordle_List.txt");
+        String dictionaryFile = "/Wordle_Dictionary.txt";
+        String weightedListFile = "/Weighted_Wordle_List.txt";
 
-        String input;
+        String input = "-";
 
         /*
          * Initial banner with prompt for user selection.
          */
         System.out.print("\n*** Worlde Solver ***\n");
 
+
         while(true)  
         {
-            while(true) // Ensures proper input.
-            {
-                printSelectionMenu();
-                input = in.nextLine();
-                if(checkForDebugger(input))
-                {
-                    printDebugMenu();
-                    debugger(in.nextLine());
-                    System.out.println();
-                }
-                else if(!checkMenuSelection(input))
-                {
-                    System.out.println(input + " was not a valid choice.");
-                }
-                else
-                {
-                    break;
-                }
-            }   
+            input = ensureProperInput(true);
 
             if(input.equals("1"))   // Starts a game played by a person (not played by a bot).
             {
@@ -81,32 +63,14 @@ public class Driver
 
                 game.printResultsPlayer();
             }
-            else    // Starts a game played by a bot (not played by the person).
+            else    // Starts a game played by a bot.
             {
                 game = new Game(dictionaryFile, weightedListFile, 50);
                 game.botPlays();
                 game.printResultsBot();
             }
         
-            while(true) // Ensures proper input.
-            {
-                printPlayAgainMenu();
-                input = in.nextLine();
-                if(checkForDebugger(input))
-                {
-                    printDebugMenu();
-                    debugger(in.nextLine());
-                    System.out.println();
-                }
-                else if(!checkMenuSelection(input))
-                {
-                    System.out.println(input + " was not a valid choice.");
-                }
-                else
-                {
-                    break;
-                }
-            }
+            input = ensureProperInput(false);
             
             if(input.equals("2")) // Terminate program.
             {
@@ -117,6 +81,46 @@ public class Driver
         in.close();
         System.out.println("\nThanks for playing!\n");
         System.exit(0);
+    }
+
+    /**
+     * Ensures the player only enters valid input. Rejects any invalid input
+     * and requests the player to reenter a valid option.
+     * 
+     * @param menuSelect Selects which of the menus to display. True selects the 
+     * SelectionMenu, Flase selects the PlayAgainMenu.
+     * @return A String that contains the validated user input.
+     */
+    public static String ensureProperInput(boolean menuSelect) {
+        String input;
+        
+        while(true) // Ensures proper input.
+        {
+            if (menuSelect)
+            {
+                printSelectionMenu();
+            }
+            else
+            {
+                printPlayAgainMenu();
+            }
+            
+            input = in.nextLine();
+            if(checkForDebugger(input))
+            {
+                printDebugMenu();
+                debugger(in.nextLine());
+                System.out.println();
+            }
+            else if(!checkMenuSelection(input))
+            {
+                System.out.println(input + " was not a valid choice.");
+            }
+            else
+            {
+                return input;
+            }
+        }
     }
 
     /**
