@@ -2,23 +2,25 @@ package tests;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-
+import java.util.ArrayList;
 import classes.Game;
 
-//TODO: Check https://stackoverflow.com/questions/74201115/filenotfoundexception-during-junit-tests-but-not-when-running-the-actual-app
 public class GameTests
 {
 
         @Test
         public void StalkStall()
         {
-                String dictionaryFile = "/Wordle_Dictionary";
-                String weightedListFile = "/Weighted_Wordle_List";
+                String dictionaryFile = "/Wordle_Dictionary.txt";
+                String weightedListFile = "/Weighted_Wordle_List.txt";
 
-                Game game = new Game(dictionaryFile, weightedListFile, "Stall", 6);
-                assertTrue(game.gameStep("Stalk"));
+                Game game = new Game(dictionaryFile, weightedListFile, "Stall", 50);
+                long start = System.nanoTime();
+                game.botPlays("Stalk");
+                long finish = System.nanoTime();
+                System.out.printf("Time Elapsed for StalkStall: %2.10fms", (((double)finish - (double)start) / 1000000));
+
+                game.printResultsBot();
         }
 
         // @Test
@@ -340,8 +342,8 @@ public class GameTests
         // @Test
         // public void AbcbdDbcbe()
         // {
-        //         File dictionary = new File("src/Wordle_Dictionary.txt");
-        //         File weightedListFile = new File("src/Weighted_Wordle_List.txt");
+        //         String dictionary = "src/Wordle_Dictionary.txt";
+        //         String weightedListFile = "src/Weighted_Wordle_List.txt";
         //         ArrayList<Integer> correct;
         //         ArrayList<Integer> notAttempted;
         //         Letter letter;

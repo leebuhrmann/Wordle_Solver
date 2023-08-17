@@ -149,11 +149,31 @@ public class Game
 
     /**
      * Plays a game where the computer makes its own guesses until it finds the answer.
+     * Uses a random first guess.
      */
     public void botPlays()
     {
         Random rand = new Random();
         char[] newGuess = wordList.get(rand.nextInt(CORRECT_WORD_LIST_SIZE)).toCharArray(); // Makes a random first guess.
+        setGuess(newGuess);
+        gameStep(new String(getGuess()));
+
+        while(!completed() && makeGuess())
+        {
+            String guessString = new String(getGuess());
+            gameStep(guessString);
+        }
+    }
+
+    /**
+     * Plays a game where the computer makes its own guesses until it finds the answer.
+     * This version is for testing purposes.
+     * 
+     * @param firstGuess - The first guess the bot will play.
+     */
+    public void botPlays(String firstGuess)
+    {
+        char[] newGuess = firstGuess.toCharArray();
         setGuess(newGuess);
         gameStep(new String(getGuess()));
 
