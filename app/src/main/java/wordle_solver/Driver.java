@@ -1,5 +1,5 @@
 
-
+package wordle_solver;
 import java.util.Scanner;
 
 
