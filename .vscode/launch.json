@@ -9,6 +9,13 @@
             "name": "Driver",
             "request": "launch",
             "mainClass": "application.Driver",
+            "projectName": "Wordle_Solver_b56e468"
+        },
+        {
+            "type": "java",
+            "name": "Driver",
+            "request": "launch",
+            "mainClass": "application.Driver",
             "projectName": "Wordle_Solver_b17c8fe5"
         },
         {
