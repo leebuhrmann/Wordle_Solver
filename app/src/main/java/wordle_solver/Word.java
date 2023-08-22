@@ -1,4 +1,3 @@
-package wordle_solver;
 
 
 public class Word {

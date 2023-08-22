@@ -10,6 +10,10 @@
         "lib/**/*.jar",
         "build/libs/**/*.jar"
     ],
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.project.sourcePaths": [
+        "src",
+        "app/src/main/java/wordle_solver"
+    ]
 }
 

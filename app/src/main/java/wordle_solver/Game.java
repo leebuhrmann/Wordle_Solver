@@ -1,4 +1,4 @@
-package wordle_solver;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
