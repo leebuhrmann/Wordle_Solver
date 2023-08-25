@@ -32,19 +32,31 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'wordle_solver.App'
+    mainClass = 'wordle_solver.Driver'
+}
+
+run {
+    standardInput = System.in
 }
 
 sourceSets {
     main {
+        java {
+            srcDir 'src/main/java'
+        }
         resources {
-            srcDirs = ['src/resources', 'src/main/resources']
+            srcDir 'src/resources'
         }
     }
     test {
+        java {
+            srcDir 'src/test/java'
+        }
         resources {
-            srcDirs = ['src/resources', 'src/test/resources']
+            srcDir 'src/resources'  // Since you mentioned both main and test share the same resources
         }
     }
 }
+
+
 
